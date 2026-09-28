@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ GARTIC AUTODRAW AI STUDIO PRO (v2.0)
+# ⚡ GARTIC AUTODRAW AI STUDIO PRO (v2.6.0)
 ### 🎨 The Ultimate Next-Gen Auto-Draw Engine for Gartic Phone & Gartic.io
 **Ultra-Realistic • 18-Color Official Palette • 2K / 4K Native • Sub-Millisecond Win32 C Driver**
 
@@ -223,12 +223,23 @@ GarticAutoDraw_Baslat.bat
 python main.py
 ```
 
-### 3. Kullanım Adımları
+### 3. Kullanım Adımları (18 Renk Kusursuz Çizim Rehberi)
 1. İstediğiniz herhangi bir görseli panoya kopyalayın (`Ctrl+C`).
-2. Stüdyoda **`Panodan Yapıştır (Ctrl+V)`** butonuna tıklayın.
-3. Soldaki mor **`👑 ULTRA MAX PRO KALİTE`** butonuna basın (tüm ayarlar otomatik zirveye çekilir).
-4. Üstteki **`⚡ 2K TAM AYARLA`** butonuna basın (tuvaliniz `780x260` 2K moduna ayarlanır).
-5. Gartic Phone sekmesine geçip **`F8`** tuşuna basın!
+2. Stüdyoda **`Panodan Yapıştır (Ctrl+V)`** veya **`Bilgisayardan Resim Seç`** butonuna tıklayın.
+3. **Sanatsal Tarzınızı Seçin:**
+   - 👑 **Portre:** Canlı ten rengi katmanı ve terracotta gölgelerle insan yüzleri için en iyisi.
+   - 🎌 **Anime:** Cell-shading manga renk alanları ve belirgin konturlar.
+   - 🎭 **Neon:** Parlak siber renkler ve otomatik siyah arka plan temizliği.
+   - ✏️ **Eskiz:** Klasik karakalem tarama.
+   - 👾 **Piksel:** 5 kat hızlı nostaljik 8-bit piksel sanatı.
+4. **Ekran & Palet Ayarı (Tek Tık):**
+   - Üst bardaki **`🔍 EKRANI TARA & TAM AYARLA (CV)`** butonuna basın veya açılır menüden ekranınızı seçin (`2K`, `1080p`, `4K`, `Laptop`).
+   - Tuval ve 18 renk paleti butonları **milisaniyeler içinde** tam merkez koordinatlarına kilitlenir.
+5. **🎯 Paleti Test Edin (İsteğe Bağlı ama Önerilen):**
+   - Üstteki **`🎯 Paleti Test Et`** butonuna tıklayın. Fare imleciniz sırayla 18 rengin tam merkezinde durarak size butonları gösterecektir.
+6. **Çizimi Başlatın:**
+   - **`F8`** kısayol tuşuna veya yeşil **`🚀 Çizmeye Başla`** butonuna basın.
+   - 3 saniyelik sesli geri sayım başlar, Gartic Phone penceresi otomatik öne gelir ve 18 renkle çizim eksiksiz başlar!
 
 ---
 

@@ -69,16 +69,15 @@ class GarticPaletteManager:
     def calibrate_relative_to_canvas(self, cx: int, cy: int, cw: int, ch: int):
         """
         Positions the 3x6 color palette relative to the Gartic Phone canvas.
-        Based on bit-perfect measurements from native 2K display & user screenshot:
-        Black (Row 0, Col 0): (cx - 228, cy + 122) -> (552, 382) on 2K
-        Peach (Row 5, Col 2): (cx - 89, cy + 460)  -> (691, 720) on 2K
-        Col step: exactly 69.5 px
-        Row step: exactly 67.6 px
+        Based on mathematically verified pixel ratios from official Gartic Phone UI:
+        Canvas Left is at cx, Top is at cy.
+        Black (Row 0, Col 0): (cx - int(cw * 0.1625), cy + int(ch * 0.2381)) -> (617, 431) on 2K
+        Peach (Row 5, Col 2): (cx - int(cw * 0.0708), cy + int(ch * 0.8155)) -> (709, 847) on 2K
         """
-        tl_x = int(round(cx - (cw * 0.228)))
-        tl_y = int(round(cy + (ch * 0.1694)))
-        br_x = int(round(cx - (cw * 0.089)))
-        br_y = int(round(cy + (ch * 0.6389)))
+        tl_x = int(round(cx - (cw * 0.1625)))
+        tl_y = int(round(cy + (ch * 0.2381)))
+        br_x = int(round(cx - (cw * 0.0708)))
+        br_y = int(round(cy + (ch * 0.8155)))
         self.calibrate_from_two_corners(tl_x, tl_y, br_x, br_y)
 
     def calibrate_from_two_corners(self, tl_x: int, tl_y: int, br_x: int, br_y: int):

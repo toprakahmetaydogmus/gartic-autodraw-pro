@@ -81,16 +81,17 @@ class Win32MouseController:
         """
         user32.SetCursorPos(int(x), int(y))
 
-        # Also emit native hardware mouse move event
-        norm_x = int((x - self.v_left) * 65536 / self.v_width)
-        norm_y = int((y - self.v_top) * 65536 / self.v_height)
-        user32.mouse_event(
-            MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
-            norm_x,
-            norm_y,
-            0,
-            0,
-        )
+        # Also emit native hardware mouse move event with exact 0..65535 normalization
+        if self.v_width > 1 and self.v_height > 1:
+            norm_x = int(round((x - self.v_left) * 65535.0 / (self.v_width - 1)))
+            norm_y = int(round((y - self.v_top) * 65535.0 / (self.v_height - 1)))
+            user32.mouse_event(
+                MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK,
+                norm_x,
+                norm_y,
+                0,
+                0,
+            )
 
     def mouse_down(self, x: Optional[int] = None, y: Optional[int] = None):
         """Presses and holds left mouse button with DOM dispatch delay."""

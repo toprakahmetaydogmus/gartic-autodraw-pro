@@ -1274,26 +1274,6 @@ class GarticAutoDrawApp(ctk.CTk):
         )
         self.calibrator.test_canvas_bounds_visual(speed_delay=0.003)
 
-    def test_palette_buttons(self):
-        """Visually hovers across all 18 color buttons to demonstrate exact calibration."""
-        def _worker():
-            self.lbl_progress_status.configure(
-                text="🎨 18 Renk Paleti test ediliyor... Fareyi izleyin!",
-                text_color="#38bdf8",
-            )
-            for name, coord in self.img_engine.palette_mgr.color_coords.items():
-                if self.mouse_ctrl.should_abort:
-                    break
-                self.mouse_ctrl.set_cursor_pos(coord[0], coord[1])
-                msg = f"🎨 Renk: {name} ({coord[0]}, {coord[1]})"
-                self.after(0, lambda m=msg: self.lbl_progress_status.configure(text=m, text_color="#38bdf8"))
-                time.sleep(0.18)
-            self.after(0, lambda: self.lbl_progress_status.configure(
-                text="✅ 18 Renk Paleti testi tamamlandı! Tüm butonlar tam merkezde.",
-                text_color="#10b981",
-            ))
-        threading.Thread(target=_worker, daemon=True).start()
-
     def _start_drawing_with_countdown(self):
         """
         Provides a 3-second audible/visual countdown, activates browser focus, and starts drawing.
@@ -1369,22 +1349,22 @@ class GarticAutoDrawApp(ctk.CTk):
                     self.mouse_ctrl.mouse_up()
                     time.sleep(0.01)
                 self.mouse_ctrl.set_cursor_pos(coord[0], coord[1])
-                time.sleep(0.025)
+                time.sleep(0.035)
                 self.mouse_ctrl.mouse_down()
-                time.sleep(0.045)
+                time.sleep(0.055)
                 self.mouse_ctrl.mouse_up()
-                time.sleep(0.075)
+                time.sleep(0.085)
 
         # Auto-select Thin Pen tool on Gartic Phone right toolbar if enabled
         if hasattr(self, "switch_auto_pen") and self.switch_auto_pen.get():
-            pen_x = int(cx + cw + (ch * 0.08))
-            pen_y = int(cy + (ch * 0.1694))
+            pen_x = int(round(cx + cw + (cw * 0.0747)))
+            pen_y = int(round(cy + (ch * 0.2440)))
             self.mouse_ctrl.set_cursor_pos(pen_x, pen_y)
-            time.sleep(0.025)
+            time.sleep(0.03)
             self.mouse_ctrl.mouse_down()
-            time.sleep(0.045)
+            time.sleep(0.05)
             self.mouse_ctrl.mouse_up()
-            time.sleep(0.06)
+            time.sleep(0.07)
 
         # Pre-select first color (this also focuses browser window cleanly without marking the canvas)
         if self.stroke_colors and len(self.stroke_colors) > 0:
@@ -1417,12 +1397,14 @@ class GarticAutoDrawApp(ctk.CTk):
 
     def _on_draw_progress(self, current: int, total: int, current_color: str):
         fraction = float(current) / float(total) if total > 0 else 0.0
+        from core.gartic_palette import GARTIC_COLOR_NAMES_TR
+        tr_c = GARTIC_COLOR_NAMES_TR.get(current_color, current_color)
 
         def _update():
             self.progress_bar.set(fraction)
             pct = int(fraction * 100)
             self.lbl_progress_status.configure(
-                text=f"🎨 Çiziliyor (%{pct}) - Çizgi {current:,} / {total:,} [{current_color}]",
+                text=f"🎨 Çiziliyor (%{pct}) - Çizgi {current:,} / {total:,} [{tr_c}]",
                 text_color="#38bdf8",
             )
 

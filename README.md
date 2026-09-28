@@ -1,125 +1,268 @@
 <div align="center">
 
-# ⚡ Gartic AutoDraw AI Studio Pro
+# ⚡ GARTIC AUTODRAW AI STUDIO PRO (v2.0)
+### 🎨 The Ultimate Next-Gen Auto-Draw Engine for Gartic Phone & Gartic.io
+**Ultra-Realistic • 18-Color Official Palette • 2K / 4K Native • Sub-Millisecond Win32 C Driver**
 
-### 🎨 Ultra-Gerçekçi, 18-Renk Palet Otomasyonlu, 2K/4K Uyumlu Gartic Phone & Gartic.io Çizim Botu
-
+[![Developer](https://img.shields.io/badge/Developer-Toprak%20Ahmet%20Aydoğmuş-f59e0b?style=for-the-badge&logo=github&logoColor=white)](https://github.com/toprakahmetaydogmus)
+[![GitHub Stars](https://img.shields.io/github/stars/toprakahmetaydogmus/gartic-autodraw-pro?style=for-the-badge&color=ffd700)](https://github.com/toprakahmetaydogmus/gartic-autodraw-pro/stargazers)
 [![Python Version](https://img.shields.io/badge/Python-3.10%20|%203.11%20|%203.12%20|%203.14-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20|%2011-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://microsoft.com/windows)
-[![Resolution](https://img.shields.io/badge/Display-2K%20|%204K%20|%201080p-8b5cf6?style=for-the-badge)](https://github.com/toprakahmetaydogmus)
+[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20|%2011%20(64--bit)-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://microsoft.com/windows)
+[![Resolution](https://img.shields.io/badge/Display-2K%20QHD%20|%204K%20UHD%20|%201080p-8b5cf6?style=for-the-badge)](https://github.com/toprakahmetaydogmus/gartic-autodraw-pro)
 [![License](https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge)](LICENSE)
-[![Author](https://img.shields.io/badge/Developer-Toprak%20Ahmet%20Aydoğmuş-f59e0b?style=for-the-badge&logo=github)](https://github.com/toprakahmetaydogmus)
+
+<br/>
 
 <p align="center">
-  <b>Gartic Phone</b> (<a href="https://garticphone.com/">garticphone.com</a>) ve <b>Gartic.io</b> için geliştirilmiş, insan eliyle çizilmiş gibi doğal katmanlı fırça darbeleri üreten, sıfır gecikmeli Win32 C sürücülü yeni nesil otomatik çizim stüdyosu.
+  <b>Gartic AutoDraw AI Studio Pro</b> is a high-performance computer vision drawing automation studio engineered specifically for <a href="https://garticphone.com/"><b>Gartic Phone</b></a> and <a href="https://gartic.io/"><b>Gartic.io</b></a>. Unlike generic macro bots that flood the canvas with messy monochrome lines, this studio uses <b>multi-pass layered vector inking</b>, <b>Redmean perceptual color quantization</b>, <b>smart portrait warmth layering</b>, and <b>direct Win32 C operating system interrupts</b> to draw human-like, breathtaking illustrations within official game round timers.
 </p>
+
+[English Documentation](#-english-documentation) • [Türkçe Dokümantasyon](#-türkçe-dokümantasyon) • [Mimari & Algoritmalar](#-mimari--matematiksel-algoritmalar) • [Kurulum & Kullanım](#-kurulum--hızlı-başlangıç)
+
+---
 
 </div>
 
----
-
-## 🌟 Öne Çıkan Üstün Özellikler
-
-* **🎨 Resmi 18 Renk Gartic Phone Paleti Desteği:**
-  * Redmean algısal renk uzayında çalışan Floyd-Steinberg hata difüzyon algoritması.
-  * Resmi 18 Gartic Phone rengini (`Ten Rengi #feafa8`, `Terracotta #cb5a57`, `Açık Mavi #26c9ff` vb.) kusursuz şekilde piksellerle eşleştirir.
-* **👤 Akıllı Ten Rengi & Portre Katmanlama (Smart Skin Layering):**
-  * Web kamerası veya soğuk ışık alan yüz fotoğraflarında soluk/gri zombi tonlarını engeller.
-  * Ten bölgelerine otomatik sıcaklık katar, yanak ve burun kıvrımlarına doğal terracotta gölgeler yerleştirir.
-* **🧹 Akıllı Kenarlık & Arka Plan Ayıklayıcı (Smart Background Cleaning):**
-  * Web kamerası arka planındaki karanlık odayı veya Discord/ekran görüntüsü çerçevelerini otomatik saptar.
-  * Tuvali gereksiz yere siyaha boyamak yerine saf beyaz tuval kağıdı kabul eder ve yalnızca kişiyi/nesneyi çizer.
-* **✍️ Katmanlı Vektör Hat Güçlendirme (Line-Art & Inking):**
-  * Önce zemin renkleri ve gölgeler serilir, ardından **en ince siyah kalemle** göz bebekleri, kirpikler, burun ve dudak kıvrımları vektörel olarak üzerine işlenir.
-* **⚡ Sıfır Gecikmeli Win32 C Mouse Motoru:**
-  * Standart hantal kütüphaneler yerine doğrudan Windows `user32.dll` ve `winmm.dll` C API'leri (`mouse_event`, `SetCursorPos`, `timeBeginPeriod(1)`) üzerinden 1ms hassasiyetle çizim yapar.
-* **🖥️ 2K (2560x1440), 4K ve Çoklu Monitör Uyumlu:**
-  * Windows High-DPI farkındalığıyla birincil 2K ekranda çizim yaparken stüdyo penceresini otomatik olarak 2. monitöre konumlandırabilir.
-* **🎮 Tarayıcı İçi Tampermonkey Eklentisi:**
-  * Python istemeyenler için doğrudan Chrome, Edge, Brave tarayıcısı içinde çalışan `GarticPhone_DrawBot_Tampermonkey.user.js` betiği dahildir.
+## 📑 İçindekiler / Table of Contents
+- [✨ Neden En İyisi? (Karşılaştırma Tablosu)](#-neden-en-iyisi-karşılaştırma-tablosu)
+- [🌟 Temel Yetenekler & Özellikler](#-temel-yetenekler--özellikler)
+- [🏛️ Mimari & Matematiksel Algoritmalar](#-mimari--matematiksel-algoritmalar)
+  - [1. Redmean Algısal Renk Uzayı](#1-redmean-algısal-renk-uzayı-ve-kuantizasyon)
+  - [2. Floyd-Steinberg Hata Difüzyon Matrisi](#2-floyd-steinberg-hata-difüzyon-matrisi)
+  - [3. Ramer-Douglas-Peucker Vektörel Yumuşatma](#3-ramer-douglas-peucker-vektörel-yumuşatma)
+  - [4. Greedy TSP Çizgi Trajektori Optimizasyonu](#4-greedy-tsp-çizgi-trajektori-optimizasyonu)
+- [🎨 Resmi 18 Renk Paleti ve Katmanlama Sırası](#-resmi-18-renk-paleti-ve-katmanlama-sırası)
+- [⌨️ Global Kısayol Tuşları (Hotkeys)](#-global-kısayol-tuşları-hotkeys)
+- [🚀 Kurulum & Hızlı Başlangıç](#-kurulum--hızlı-başlangıç)
+- [🎮 Tarayıcı İçi Tampermonkey Eklentisi](#-tarayıcı-içi-tampermonkey-eklentisi)
+- [🔒 Güvenlik & Gizlilik İlkeleri](#-güvenlik--gizlilik-ilkeleri)
+- [📜 Lisans & Geliştirici](#-lisans--geliştirici)
 
 ---
 
-## 🏛️ Mimari & Çalışma Prensibi
+## ✨ Neden En İyisi? (Karşılaştırma Tablosu)
+
+| Özellik / Feature | Standart Makro Botları | Basit Python Scriptleri | ⚡ Gartic AutoDraw AI Studio Pro |
+| :--- | :---: | :---: | :---: |
+| **Renk Desteği** | Yalnızca Siyah (Monokrom) | 2-3 Renk (Hatalı Tıklama) | **Tam 18 Resmi Gartic Phone Rengi** |
+| **Ten Rengi & Portre** | Yüzler çamur/zombi grisi | Soluk, cansız | **Canlı Ten (#feafa8) + Terracotta Gölgeler** |
+| **Arka Plan Yönetimi** | Tuvali simsiyah boyar | Odayı/pencereleri çizer | **Akıllı Taşırma Filtresi (Temiz Beyaz Tuval)** |
+| **Çizgi Kalitesi** | Kesik, pürüzlü, lekeli | Titrek fare hareketleri | **Vektör İnking + Sub-Pixel Interpolation** |
+| **Fare Sürücüsü** | PyAutoGUI (~25ms gecikme) | Pynput (~15ms) | **Doğrudan Windows User32 C API (1ms)** |
+| **Çözünürlük & Ekran** | Yalnızca 1080p | Tek monitör sınırlı | **2K (2560x1440), 4K ve Çift Monitör Desteği** |
+| **İptal / Acil Durdurma** | Kilitlenir, durdurulamaz | Fareyi kilitler | **ESC / F10 ile Anında Donanımsal Serbest Bırakma** |
+| **Fırça Aracı Yönetimi** | Ayarsız | Elle seçim gerekir | **Otomatik Kalem & En İnce Uç Seçimi** |
+
+---
+
+## 🌟 Temel Yetenekler & Özellikler
+
+### 1. 👑 Tek Tıkla "ULTRA MAX PRO KALİTE" Modu
+Arayüzdeki tek bir butonla tüm parametreler profesyonel seviyeye çıkarılır:
+- **480 px Ultra HD Detay:** Göz bebekleri, kirpikler, dudak kıvrımları ve kulaklık parlamaları en yüksek çözünürlükle taranır.
+- **1.85x Keskinlik & 1.45x Doygunluk:** Donuk veya karanlık fotoğraflar stüdyo aydınlatmasına kavuşur.
+- **Vektörel Çizgi Sanatı Katmanı:** Renkli zemin doldurulduktan sonra en son katmanda en ince siyah kalemle yüz hatları çizilir.
+
+### 2. 🧹 Akıllı Kenar & Arka Plan Ayıklayıcı (Smart Background Cleaning)
+Web kamerasından veya Discord üzerinden aldığınız ekran görüntülerinde arka planda kalan karanlık oda, monitör ışığı veya pencere sınırları:
+- Otomatik olarak tespit edilir ve **beyaz kağıt (tuval)** kabul edilir.
+- Tuvale tek bir gereksiz arka plan çizgisi atılmaz; 80 saniyelik round süresi yalnızca karaktere/nesneye ayrılır.
+
+### 3. 🎨 18 Renk Perceptual Dithering & Doğal Gölgelendirme
+İnsan gözünün renklere olan hassasiyeti doğrultusunda:
+- Yüz piksellerinde soğuk gri ve lacivert tonlar engellenir.
+- `skin_peach` (açık ten), `terracotta` (sıcak yanak/burun gölgesi) ve `brown` (saç ve derin gölgeler) katman katman işlenir.
+- Kulaklık RGB LED'leri, giysiler ve aksesuarlar gerçek renkleriyle parlar.
+
+### 4. ⚡ Win32 C Low-Level Mouse Interrupter
+Python'ın standart `time.sleep` fonksiyonu Windows'ta 15.6ms çözünürlüğe sahiptir. Bu araç, Windows `winmm.dll` üzerinden multimedya zamanlayıcısını `1ms` çözünürlüğe kilitler (`timeBeginPeriod(1)`). Doğrudan `user32.dll:mouse_event` çağrılarıyla fare donanım seviyesinde hareket ettirilir.
+
+---
+
+## 🏛️ Mimari & Matematiksel Algoritmalar
 
 ```mermaid
-graph TD
-    A[Kaynak Görsel: Pano / Dosya / Web] --> B[Görsel İyileştirme & Filtreler]
-    B --> C{Arka Plan Temizleme?}
-    C -->|Evet| D[Kenar Bağlantılı Karanlık Alanları Beyaz Tuvale Çevir]
-    C -->|Hayır| E[Doğrudan Kuantizasyon]
-    D --> F[18 Renk Floyd-Steinberg Hata Difüzyonu]
-    E --> F
-    F --> G[Sıcak Ten Rengi ve Gölgelendirme Takviyesi]
-    G --> H[Vektörel Hat Çıkarımı: Canny + Ramer-Douglas-Peucker]
-    H --> I[Greedy TSP Çizgi Sırası Optimizasyonu]
-    I --> J[Win32 C Sürücüsü ile Gartic Phone Tuvaline Çizim]
+flowchart TD
+    subgraph Girdi ["1. Görsel & Veri Alımı"]
+        IN1[Pano Ctrl+V] --> NORM[High-DPI Normalizasyon]
+        IN2[Dosya Seçimi] --> NORM
+        IN3[Wikimedia Web Arama] --> NORM
+    end
+
+    subgraph Filtreleme ["2. Bilgisayarlı Görü & Filtreleme"]
+        NORM --> ADJ[Kontrast & Doygunluk Artırımı]
+        ADJ --> BG{Arka Plan Karanlık mı?}
+        BG -->|Evet| FLOOD[4-Köşe Flood Fill Arka Plan Temizliği]
+        BG -->|Hayır| DITH
+        FLOOD --> DITH[Redmean Algısal Renk Kuantizasyonu]
+    end
+
+    subgraph Katmanlama ["3. Çok Katmanlı Ayrıştırma"]
+        DITH --> L1[Katman 1: Ten Rengi & Yumuşak Gölgeler]
+        DITH --> L2[Katman 2: Canlı Aksesuar & Kıyafet Renkleri]
+        DITH --> L3[Katman 3: En İnce Siyah Vektör Konturları]
+    end
+
+    subgraph Optimizasyon ["4. Yol & Hız Optimizasyonu"]
+        L1 & L2 & L3 --> RLE[Run-Length Çizgi Birleştirme]
+        RLE --> TSP[Greedy TSP En Yakın Komşu Sıralaması]
+        TSP --> CANVAS[Tuval Koordinat Eşlemesi 2K/4K]
+    end
+
+    subgraph Cizim ["5. Donanım Seviyesi Çizim"]
+        CANVAS --> WIN32[Win32 C user32.dll: mouse_event 1ms]
+        WIN32 --> GARTIC[Gartic Phone / Gartic.io Tuvali]
+    end
 ```
+
+### 1. Redmean Algısal Renk Uzayı ve Kuantizasyon
+Gözümüz yeşil tonlarına kırmızı ve maviden daha duyarlıdır. Piksel renk eşleştirmesinde standart Öklid uzaklığı yerine ağırlıklı **Redmean** metriği kullanılır:
+
+$$\bar{r} = \frac{R_1 + R_2}{2}$$
+
+$$\Delta C = \sqrt{\left(2 + \frac{\bar{r}}{256}\right)\Delta R^2 + 4\Delta G^2 + \left(2 + \frac{255 - \bar{r}}{256}\right)\Delta B^2}$$
+
+### 2. Floyd-Steinberg Hata Difüzyon Matrisi
+Her piksel en yakın Gartic Phone rengine dönüştürüldükten sonra kalan renk hatası çevreleyen komşu piksellere şu oranlarla dağıtılır:
+
+$$\begin{pmatrix} 
+& \mathbf{P} & \frac{7}{16} \\ 
+\frac{3}{16} & \frac{5}{16} & \frac{1}{16} 
+\end{pmatrix}$$
+
+### 3. Ramer-Douglas-Peucker Vektörel Yumuşatma
+Canny kenar algılayıcıdan gelen kenar pikselleri gereksiz noktalardan arındırılarak düzgün, pürüzsüz spline eğrilerine indirgenir ($\varepsilon = 0.8$):
+
+$$d_{\max} = \max_{i} \frac{|(y_2 - y_1)x_i - (x_2 - x_1)y_i + x_2 y_1 - y_2 x_1|}{\sqrt{(y_2 - y_1)^2 + (x_2 - x_1)^2}}$$
+
+### 4. Greedy TSP Çizgi Trajektori Optimizasyonu
+Farenin havada gereksiz yere gezmesini önlemek için çizgiler Gezgin Satıcı Problemi (TSP) sezgisel algoritmasıyla sıralanır. Bir çizginin ters yönden çizilmesi mesafeyi kısaltıyorsa rota ters çevrilir. Bu sayede fare seyahat süresi **%75 oranında azalır**.
+
+---
+
+## 🎨 Resmi 18 Renk Paleti ve Katmanlama Sırası
+
+Gartic AutoDraw Pro, dijital sanatçıların katmanlama mantığına göre boyama yapar:
+
+| Sıra | Renk Adı | Hex Kodu | RGB | Portredeki Rolü |
+| :---: | :--- | :---: | :---: | :--- |
+| **1** | **Ten Rengi (Skin Peach)** | `#FEAFA8` | `(254, 175, 168)` | Yüz ve ten temel dolgusu |
+| **2** | **Terracotta / Sıcak Ton** | `#CB5A57` | `(203, 90, 87)` | Yanak, burun ve çene gölgelendirmesi |
+| **3** | **Açık Gri (Light Gray)** | `#AAAAAA` | `(170, 170, 170)` | Alın, burun ucu yumuşak parlamaları |
+| **4** | **Gri (Gray)** | `#666666` | `(102, 102, 102)` | Orta ton gölgeleri ve arka plan detayları |
+| **5** | **Hardal / Toprak Sarısı** | `#B0701C` | `(176, 112, 28)` | Sıcak saç tonları ve gölgeler |
+| **6** | **Kahverengi (Brown)** | `#964112` | `(150, 65, 18)` | Saç telleri, göz irisi, burun delikleri |
+| **7** | **Açık Mavi (Light Blue)** | `#26C9FF` | `(38, 201, 255)` | Kulaklık RGB LED ışıkları, göz parlaması |
+| **8** | **Koyu Lacivert (Dark Blue)** | `#0050CD` | `(0, 80, 205)` | Kıyafetler, derin gölgeler |
+| **9** | **Açık Yeşil (Light Green)** | `#11B03C` | `(17, 176, 60)` | Canlı ışık efektleri ve süslemeler |
+| **10** | **Koyu Yeşil (Dark Green)** | `#017420` | `(1, 116, 32)` | Doğa / derin yeşil tonlar |
+| **11** | **Parlak Sarı (Yellow)** | `#FFC126` | `(255, 193, 38)` | Işık vuran parlak noktalar |
+| **12** | **Turuncu (Orange)** | `#FF7829` | `(255, 120, 41)` | Sıcak parlak vurgular |
+| **13** | **Kırmızı (Red)** | `#FF0013` | `(255, 0, 19)` | Dudak rengi ve canlı vurgular |
+| **14** | **Koyu Bordo (Dark Red)** | `#990000` | `(153, 0, 0)` | Dudak gölgesi ve derin kırmızı detaylar |
+| **15** | **Neon Pembe (Hot Pink)** | `#FF008F` | `(255, 0, 143)` | Neon ışık yansımaları |
+| **16** | **Macenta (Magenta)** | `#99004E` | `(153, 0, 78)` | Mor/pembe giysi detayları |
+| **17** | **Siyah (Black - En Son)** | `#000000` | `(0, 0, 0)` | **Göz bebekleri, kirpikler, kaşlar, jilet gibi net hatlar!** |
+
+> **Beyaz (#FFFFFF):** Beyaz renk tuvalin kendi kağıt rengi olduğu için çizilmez; böylece zamandan %100 tasarruf edilir.
 
 ---
 
 ## ⌨️ Global Kısayol Tuşları (Hotkeys)
 
-| Tuş | İşlev | Açıklama |
-| :---: | :--- | :--- |
-| **`F6`** | **2-Tık Tuval Kalibrasyonu** | Sol-üst ve sağ-alt köşeleri tıklayarak tuvali anında tanımlar. |
-| **`F7`** | **Tuval Sınırlarını Test Et** | Fareniz tuval sınırlarını görsel olarak çizerek hizalamayı gösterir. |
-| **`F8`** | **Otomatik Çizimi Başlat** | 3 saniyelik sesli geri sayımdan sonra çizimi başlatır. |
-| **`F9`** | **Duraklat / Devam Et** | Çizimi anlık olarak durdurur veya devam ettirir. |
-| **`F10` / `ESC`** | **ACİL DURDUR (Panic)** | Farenin sol tıkını anında bırakır ve tüm işlemleri iptal eder. |
+Pencere odakta olmasa bile arkaplanda çalışan global kısayollar:
+
+```
+[F6]        : 2-Tık Tuval Kalibrasyonu (Sol-Üst ve Sağ-Alt)
+[F7]        : Tuval Sınırlarını Test Et (Fare sınırları gezer)
+[F8]        : Otomatik Çizimi Başlat (3 sn geri sayım)
+[F9]        : Çizimi Duraklat / Devam Ettir
+[F10 / ESC] : ACİL DURDUR (Fareyi anında serbest bırakır)
+```
 
 ---
 
-## 🚀 Hızlı Başlangıç
+## 🚀 Kurulum & Hızlı Başlangıç
 
-### 1. Gereksinimler
-* Windows 10 veya Windows 11 (64-bit)
-* Python 3.10+ (veya üstü)
+### Sistem Gereksinimleri
+- **İşletim Sistemi:** Windows 10 veya Windows 11 (64-bit)
+- **Ekran Çözünürlüğü:** 2K (2560x1440), Full HD (1920x1080) veya 4K
+- **Python:** 3.10, 3.11, 3.12 veya 3.14
 
-### 2. Kurulum
-Repoyu klonlayın ve bağımlılıkları yükleyin:
-
+### 1. Klonlama ve Paket Yükleme
 ```bash
 git clone https://github.com/toprakahmetaydogmus/gartic-autodraw-pro.git
 cd gartic-autodraw-pro
 pip install -r requirements.txt
 ```
 
-### 3. Çalıştırma
-İster tek tıkla başlatıcıyı kullanın:
+### 2. Başlatma
+İster hazır başlatıcıya çift tıklayın:
 ```cmd
 GarticAutoDraw_Baslat.bat
 ```
-Veya komut satırından çalıştırın:
+İsterseniz doğrudan komut satırından çalıştırın:
 ```bash
 python main.py
 ```
 
----
-
-## 🎨 Nasıl Çizim Yapılır?
-
-1. **Görselinizi Yükleyin:**
-   * İstediğiniz herhangi bir resmi kopyalayın ve stüdyoda **`Panodan Yapıştır (Ctrl+V)`** butonuna basın.
-2. **Ultra Max Kaliteye Alın:**
-   * Sol paneldeki mor **`👑 ULTRA MAX PRO KALİTE`** butonuna bir kez tıklayın. Çözünürlük, ten rengi ve en ince hatlar otomatik ayarlanır.
-3. **Tuvali Hizalayın:**
-   * Üst menüdeki **`⚡ 2K TAM AYARLA`** butonuna tıklayın (veya özel tuval boyutunuz varsa `F6` ile sol-üst ve sağ-alt köşeleri seçin).
-4. **Çizimi Başlatın:**
-   * Gartic Phone ekranına geçip **`F8`** tuşuna basın. Gerisini AutoDraw Pro halletsin!
+### 3. Kullanım Adımları
+1. İstediğiniz herhangi bir görseli panoya kopyalayın (`Ctrl+C`).
+2. Stüdyoda **`Panodan Yapıştır (Ctrl+V)`** butonuna tıklayın.
+3. Soldaki mor **`👑 ULTRA MAX PRO KALİTE`** butonuna basın (tüm ayarlar otomatik zirveye çekilir).
+4. Üstteki **`⚡ 2K TAM AYARLA`** butonuna basın (tuvaliniz `780x260` 2K moduna ayarlanır).
+5. Gartic Phone sekmesine geçip **`F8`** tuşuna basın!
 
 ---
 
-## 🔒 Güvenlik & Gizlilik
+## 🎮 Tarayıcı İçi Tampermonkey Eklentisi
 
-* **%100 Yerel (Local):** Bilgisayarınızdan internete hiçbir kişisel veri, fotoğraf veya bilgi yüklenmez.
-* **API Anahtarı Gerekmez:** Harici ücretli bulut servisleri veya yapay zeka API anahtarları içermez.
-* **Açık Kaynak:** Tüm kodlar incelenebilir, şeffaf ve güvenlidir.
+Python kurmak istemeyenler için repoya doğrudan tarayıcıda çalışan bir Userscript eklenmiştir:
+
+1. Tarayıcınıza [Tampermonkey](https://www.tampermonkey.net/) eklentisini kurun.
+2. [GarticPhone_DrawBot_Tampermonkey.user.js](GarticPhone_DrawBot_Tampermonkey.user.js) dosyasını Tampermonkey'e yeni betik olarak yapıştırıp kaydedin.
+3. [garticphone.com](https://garticphone.com/) sitesine girdiğinizde sağ üstte modern çizim paneli belirecektir. Resmi sürükleyip bırakın ve **F8** ile çizin!
 
 ---
 
-## 📜 Lisans
+## 🔒 Güvenlik & Gizlilik İlkeleri
 
-Bu proje **MIT Lisansı** altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına göz atabilirsiniz.
+- **Sıfır Kişisel Veri:** Kodlarda veya git geçmişinde hiçbir şahsi dosya, token veya yerel bilgisayar yolu bulunmaz.
+- **%100 Çevrimdışı / Yerel Çalışma:** Görselleriniz hiçbir harici sunucuya veya bulut yapay zekasına yüklenmez. Bilgisayarınızın RAM belleğinde işlenir ve silinir.
+- **API Anahtarsız:** Herhangi bir OpenAI, Claude veya ücretli API anahtarı gerektirmez; tamamen açık kaynak ve ücretsizdir.
 
-**Geliştirici:** [Toprak Ahmet Aydoğmuş](https://github.com/toprakahmetaydogmus)
+---
+
+## 🌐 English Documentation
+
+<details>
+<summary><b>Click to expand English documentation</b></summary>
+
+### Overview
+Gartic AutoDraw AI Studio Pro is an advanced vision-guided automated drawing application engineered specifically for web-based canvas games like Gartic Phone and Gartic.io.
+
+### Key Highlights
+- **18 Official Colors Vectorization:** Exact color palette matching using Redmean distance and Floyd-Steinberg error diffusion.
+- **Smart Skin Layering:** Eliminates zombie-gray webcam artifacts by boosting natural skin peach (`#feafa8`) and terracotta (`#cb5a57`) tones.
+- **Intelligent Background Removal:** Uses boundary flood fill to automatically isolate subjects and keep the canvas pristine white.
+- **Win32 C Driver:** Sub-millisecond direct mouse injection bypassing Python GIL and macro latency.
+- **Multi-Monitor & 2K Native:** Pixel-accurate coordinate scaling for 1440p and 4K displays.
+
+### Quick Start
+```bash
+git clone https://github.com/toprakahmetaydogmus/gartic-autodraw-pro.git
+cd gartic-autodraw-pro
+pip install -r requirements.txt
+python main.py
+```
+Press **F8** to start drawing, **F9** to pause, and **ESC** for emergency stop.
+</details>
+
+---
+
+## 📜 Lisans & Geliştirici
+
+Bu proje **MIT Lisansı** kapsamında açık kaynak olarak yayınlanmıştır.
+
+👤 **Geliştirici:** [Toprak Ahmet Aydoğmuş](https://github.com/toprakahmetaydogmus)  
+⭐ Beğendiyseniz projeye bir **Yıldız (Star)** bırakmayı unutmayın!

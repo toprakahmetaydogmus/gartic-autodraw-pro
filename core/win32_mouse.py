@@ -174,7 +174,7 @@ class Win32MouseController:
         # Move to start of stroke
         start_x, start_y = points[0]
         self.set_cursor_pos(start_x, start_y)
-        time.sleep(0.002)
+        time.sleep(0.006)
 
         self.mouse_down()
 
@@ -230,7 +230,7 @@ class Win32MouseController:
     ) -> bool:
         """
         Executes a sequence of strokes.
-        Handles pause, abort, progress reporting, and optional color switching.
+        Handles pause, abort, progress reporting, and rock-solid color switching.
         """
         self.is_drawing = True
         self.is_paused = False
@@ -263,7 +263,8 @@ class Win32MouseController:
                         current_color = col
                         if color_selector_cb:
                             color_selector_cb(col)
-                            time.sleep(0.04)
+                            # Give browser DOM / React event loop time to update canvas strokeStyle
+                            time.sleep(0.06)
 
                 success = self.draw_continuous_stroke(
                     stroke,

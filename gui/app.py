@@ -21,6 +21,7 @@ from core.image_processor import ImageProcessingEngine, DrawingMode
 from core.path_optimizer import PathOptimizer
 from core.web_search import ImageSearchEngine
 from core.hotkeys import GlobalHotkeyManager
+from core.screen_scanner import ScreenScannerCV, ScreenResolutionPresets
 from gui.calibration_overlay import CanvasCalibrator, InteractiveScreenSelector
 from gui.smart_calibrator import (
     VisualCanvasBorderOverlay,
@@ -173,7 +174,7 @@ class GarticAutoDrawApp(ctk.CTk):
     # ================= UI BUILDERS =================
 
     def _build_header_hud(self):
-        """Top bar with monitor routing, 2K auto-alignment, live canvas info, and quick actions."""
+        """Top bar with Computer Vision auto-alignment, multi-resolution presets, and quick actions."""
         self.header_frame = ctk.CTkFrame(self, height=65, corner_radius=0, fg_color="#0b1120")
         self.header_frame.pack(fill="x", side="top", padx=0, pady=0)
 
@@ -181,59 +182,69 @@ class GarticAutoDrawApp(ctk.CTk):
         logo_label = ctk.CTkLabel(
             self.header_frame,
             text="⚡ GARTIC AUTODRAW PRO",
-            font=ctk.CTkFont(family="Segoe UI", size=18, weight="bold"),
+            font=ctk.CTkFont(family="Segoe UI", size=17, weight="bold"),
             text_color="#38bdf8",
         )
-        logo_label.pack(side="left", padx=12, pady=12)
+        logo_label.pack(side="left", padx=10, pady=12)
 
-        # Multi-Monitor Action Button
-        self.btn_monitor2 = ctk.CTkButton(
+        # CV Smart Screen Scanner Button (HER EKRANA TAM UYUM)
+        self.btn_auto_scan = ctk.CTkButton(
             self.header_frame,
-            text="🖥️ 2. Monitöre Taşı",
+            text="🔍 EKRANI TARA & TAM AYARLA (CV)",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            fg_color="#334155",
-            hover_color="#475569",
-            command=self.toggle_monitor_placement,
-            width=140,
+            fg_color="#0284c7",
+            hover_color="#0369a1",
+            command=self.auto_scan_screen,
+            width=210,
             height=36,
         )
-        self.btn_monitor2.pack(side="left", padx=4, pady=12)
+        self.btn_auto_scan.pack(side="left", padx=4, pady=12)
 
-        # 2K TAM AYARLA Button
-        self.btn_auto_setup = ctk.CTkButton(
+        # Resolution Presets ComboBox
+        auto_preset_name, _ = ScreenResolutionPresets.get_auto_preset_for_screen()
+        self.combo_resolution = ctk.CTkComboBox(
             self.header_frame,
-            text="⚡ 2K TAM AYARLA",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            fg_color="#8b5cf6",
-            hover_color="#7c3aed",
-            command=self.one_click_2k_setup,
-            width=145,
+            values=[
+                "⚡ Otomatik Ekran Taraması (CV)",
+                "🖥️ 2K (2560x1440 - Önerilen)",
+                "🖥️ 1080p Full HD (1920x1080)",
+                "🖥️ 4K Ultra HD (3840x2160)",
+                "💻 Laptop HD (1366x768)",
+                "💻 Laptop FHD (1536x864 / %125 DPI)",
+            ],
+            command=self._on_resolution_preset_selected,
+            font=ctk.CTkFont(family="Segoe UI", size=11, weight="bold"),
+            width=195,
             height=36,
+            fg_color="#1e293b",
+            button_color="#334155",
+            button_hover_color="#475569",
         )
-        self.btn_auto_setup.pack(side="left", padx=4, pady=12)
+        self.combo_resolution.set(auto_preset_name)
+        self.combo_resolution.pack(side="left", padx=4, pady=12)
 
         # Show Border Button
         self.btn_show_border = ctk.CTkButton(
             self.header_frame,
-            text="👁️ Çerçeveyi Göster",
+            text="👁️ Çerçeve",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
             fg_color="#10b981",
             hover_color="#059669",
             command=self.show_visual_border,
-            width=135,
+            width=95,
             height=36,
         )
-        self.btn_show_border.pack(side="left", padx=4, pady=12)
+        self.btn_show_border.pack(side="left", padx=3, pady=12)
 
         # Palette Calibrate Button
         self.btn_calib_palette = ctk.CTkButton(
             self.header_frame,
-            text="🎨 Paleti Kalibre Et",
+            text="🎨 Palet Kalibre",
             font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
             fg_color="#d97706",
             hover_color="#b45309",
             command=self.open_palette_calibration,
-            width=130,
+            width=110,
             height=36,
         )
         self.btn_calib_palette.pack(side="left", padx=3, pady=12)
@@ -246,10 +257,36 @@ class GarticAutoDrawApp(ctk.CTk):
             fg_color="#475569",
             hover_color="#64748b",
             command=self.test_palette_buttons,
-            width=120,
+            width=115,
             height=36,
         )
         self.btn_test_palette.pack(side="left", padx=3, pady=12)
+
+        # Multi-Monitor Action Button
+        self.btn_monitor2 = ctk.CTkButton(
+            self.header_frame,
+            text="🖥️ Monitör",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            fg_color="#334155",
+            hover_color="#475569",
+            command=self.toggle_monitor_placement,
+            width=100,
+            height=36,
+        )
+        self.btn_monitor2.pack(side="left", padx=3, pady=12)
+
+        # Quick 2-click Calibration
+        self.btn_calib = ctk.CTkButton(
+            self.header_frame,
+            text="📍 2 Tık Tuval (F6)",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            fg_color="#3b82f6",
+            hover_color="#2563eb",
+            command=self.open_two_click_calibration,
+            width=120,
+            height=36,
+        )
+        self.btn_calib.pack(side="right", padx=10, pady=12)
 
         # Canvas Info Badge
         cx, cy, cw, ch = self.calibrator.get_bounds()
@@ -259,32 +296,7 @@ class GarticAutoDrawApp(ctk.CTk):
             font=ctk.CTkFont(family="Segoe UI", size=12),
             text_color="#94a3b8",
         )
-        self.lbl_canvas_badge.pack(side="left", padx=6, pady=12)
-
-        # Quick Calibration Buttons
-        self.btn_calib = ctk.CTkButton(
-            self.header_frame,
-            text="📍 2 Tıkla Seç (F6)",
-            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
-            fg_color="#0284c7",
-            hover_color="#0369a1",
-            command=self.open_two_click_calibration,
-            width=125,
-            height=36,
-        )
-        self.btn_calib.pack(side="right", padx=10, pady=12)
-
-        self.btn_test_bounds = ctk.CTkButton(
-            self.header_frame,
-            text="📐 Sınırları Gez (F7)",
-            font=ctk.CTkFont(family="Segoe UI", size=12),
-            fg_color="#1e293b",
-            hover_color="#334155",
-            command=self.test_canvas_bounds,
-            width=130,
-            height=36,
-        )
-        self.btn_test_bounds.pack(side="right", padx=4, pady=12)
+        self.lbl_canvas_badge.pack(side="right", padx=8, pady=12)
 
     def _build_main_layout(self):
         """Builds dual preview areas and left/right parameter panels."""
@@ -685,6 +697,67 @@ class GarticAutoDrawApp(ctk.CTk):
         self.progress_bar.pack(fill="x", pady=2)
 
     # ================= LOGIC & ACTIONS =================
+
+    def auto_scan_screen(self):
+        """
+        Scans the screen in real-time using Computer Vision to detect Gartic Phone's
+        canvas and 18-color palette on ANY display resolution (1080p, 2K, 4K, laptop, zoom).
+        """
+        self.lbl_progress_status.configure(
+            text="🔍 Ekran taranıyor... Gartic Phone tuvali ve 18 renk paleti aranıyor...",
+            text_color="#38bdf8",
+        )
+
+        def _worker():
+            success, msg, data = ScreenScannerCV.scan_and_calibrate()
+
+            def _apply():
+                cx, cy, cw, ch = data["canvas"]
+                self.calibrator.set_bounds(cx, cy, cw, ch)
+                pt_b = data["palette_black"]
+                pt_p = data["palette_peach"]
+                self.img_engine.palette_mgr.calibrate_from_two_corners(pt_b[0], pt_b[1], pt_p[0], pt_p[1])
+                self.lbl_canvas_badge.configure(text=f"🎯 Tuval: {cw}x{ch}px (X={cx}, Y={cy}) | 18 Renk Hazır")
+                self._save_settings()
+
+                if success:
+                    self.lbl_progress_status.configure(text=msg, text_color="#10b981")
+                    try:
+                        winsound.Beep(1600, 200)
+                    except Exception:
+                        pass
+                else:
+                    self.lbl_progress_status.configure(text=msg, text_color="#f59e0b")
+
+                self.show_visual_border()
+
+            self.after(0, _apply)
+
+        threading.Thread(target=_worker, daemon=True).start()
+
+    def _on_resolution_preset_selected(self, choice: str):
+        """Applies chosen resolution preset or triggers CV screen scan."""
+        if "Otomatik" in choice or "CV" in choice:
+            self.auto_scan_screen()
+            return
+
+        preset = ScreenResolutionPresets.PRESETS.get(choice)
+        if not preset:
+            return
+
+        cx, cy, cw, ch = preset["canvas"]
+        pt_b = preset["palette_black"]
+        pt_p = preset["palette_peach"]
+
+        self.calibrator.set_bounds(cx, cy, cw, ch)
+        self.img_engine.palette_mgr.calibrate_from_two_corners(pt_b[0], pt_b[1], pt_p[0], pt_p[1])
+        self.lbl_canvas_badge.configure(text=f"🎯 Tuval: {cw}x{ch}px ({choice.split()[0]})")
+        self.lbl_progress_status.configure(
+            text=f"✅ {choice} ayarı başarıyla uygulandı! Yeşil çerçeve tuvali gösteriyor...",
+            text_color="#10b981",
+        )
+        self._save_settings()
+        self.show_visual_border()
 
     def one_click_2k_setup(self):
         """
@@ -1179,32 +1252,35 @@ class GarticAutoDrawApp(ctk.CTk):
 
         self.progress_bar.set(0.0)
 
-        # Color selector callback for Gartic Phone palette
+        # Rock-solid color selector callback for Gartic Phone 18-color palette
         def _color_cb(color_name: str):
             coord = self.img_engine.palette_mgr.get_color_coord(color_name)
             if coord:
+                if self.mouse_ctrl.is_mouse_down:
+                    self.mouse_ctrl.mouse_up()
+                    time.sleep(0.01)
                 self.mouse_ctrl.set_cursor_pos(coord[0], coord[1])
-                time.sleep(0.02)
+                time.sleep(0.025)
                 self.mouse_ctrl.mouse_down()
-                time.sleep(0.04)
+                time.sleep(0.045)
                 self.mouse_ctrl.mouse_up()
-                time.sleep(0.05)
+                time.sleep(0.075)
 
-        # Auto-select Pen tool on Gartic Phone right toolbar if enabled
+        # Auto-select Thin Pen tool on Gartic Phone right toolbar if enabled
         if hasattr(self, "switch_auto_pen") and self.switch_auto_pen.get():
-            pen_x = int(cx + cw + (ch * 0.52))
+            pen_x = int(cx + cw + (ch * 0.08))
             pen_y = int(cy + (ch * 0.1694))
             self.mouse_ctrl.set_cursor_pos(pen_x, pen_y)
-            time.sleep(0.02)
+            time.sleep(0.025)
             self.mouse_ctrl.mouse_down()
-            time.sleep(0.04)
+            time.sleep(0.045)
             self.mouse_ctrl.mouse_up()
-            time.sleep(0.04)
+            time.sleep(0.06)
 
         # Pre-select first color (this also focuses browser window cleanly without marking the canvas)
         if self.stroke_colors and len(self.stroke_colors) > 0:
             _color_cb(self.stroke_colors[0])
-            time.sleep(0.05)
+            time.sleep(0.08)
 
         def _draw_worker():
             self.mouse_ctrl.draw_stroke_batches(

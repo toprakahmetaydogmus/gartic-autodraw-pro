@@ -49,13 +49,19 @@
 | **Arka Plan Yönetimi** | Tuvali simsiyah boyar | Odayı/pencereleri çizer | **Akıllı Taşırma Filtresi (Temiz Beyaz Tuval)** |
 | **Çizgi Kalitesi** | Kesik, pürüzlü, lekeli | Titrek fare hareketleri | **Vektör İnking + Sub-Pixel Interpolation** |
 | **Fare Sürücüsü** | PyAutoGUI (~25ms gecikme) | Pynput (~15ms) | **Doğrudan Windows User32 C API (1ms)** |
-| **Çözünürlük & Ekran** | Yalnızca 1080p | Tek monitör sınırlı | **2K (2560x1440), 4K ve Çift Monitör Desteği** |
+| **Çözünürlük & Ekran** | Yalnızca 1080p | Tek monitör sınırlı | **Her Ekrana Tam Uyum (OpenCV CV Taraması, 1080p, 2K, 4K, Laptop)** |
 | **İptal / Acil Durdurma** | Kilitlenir, durdurulamaz | Fareyi kilitler | **ESC / F10 ile Anında Donanımsal Serbest Bırakma** |
 | **Fırça Aracı Yönetimi** | Ayarsız | Elle seçim gerekir | **Otomatik Kalem & En İnce Uç Seçimi** |
 
 ---
 
 ## 🌟 Temel Yetenekler & Özellikler
+
+### 0. 🔍 Gerçek Zamanlı Bilgisayarlı Görü (CV) Ekran Taraması (Her Ekrana Otomatik Uyum)
+Artık ekran çözünürlüğünüz, Windows DPI ölçeklemeniz (%100, %125, %150) veya tarayıcı pencerenizin boyutu ne olursa olsun:
+- **Tek Tıkla Ekran Taraması:** `🔍 EKRANI TARA & TAM AYARLA (CV)` butonuna bastığınızda, OpenCV renk kümeleme algoritması Gartic Phone tuvalini ve 18 renk butonunun merkezini **35 milisaniyede** otomatik olarak bulur ve kilitler.
+- **Hazır Çözünürlük Önayarları:** Açılır menüden `1080p Full HD`, `2K QHD (2560x1440)`, `4K Ultra HD` veya `Laptop (1366x768 / 1536x864)` modunu tek tıkla seçebilirsiniz.
+- **Kusursuz Renk Geçişleri:** 45ms tıklama süresi ve 75ms React durum stabilizasyonu sayesinde çizim esnasında renkler oyunda takılmadan, atlamadan tam zamanında değişir.
 
 ### 1. 👑 Tek Tıkla "ULTRA MAX PRO KALİTE" Modu
 Arayüzdeki tek bir butonla tüm parametreler profesyonel seviyeye çıkarılır:

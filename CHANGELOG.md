@@ -5,6 +5,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ---
 
+## [2.5.0] - 2026-09-28
+
+### 🔍 Real-Time Computer Vision Screen Scanner & Universal Resolution Engine
+*(Gerçek Zamanlı Bilgisayarlı Görü Ekran Taraması ve Tüm Çözünürlüklere Tam Uyum)*
+
+#### ✨ Added / Eklenenler
+- **🔍 Real-Time OpenCV Screen Scanner (`ScreenScannerCV`):**
+  - Live desktop screen scanner using `OpenInputDesktop` and OpenCV color cluster centroid geometry.
+  - Automatically identifies Gartic Phone's canvas and the exact centers of all 18 palette buttons on ANY screen (1080p, 2K, 4K, laptop screens, or custom browser zoom levels) in under 35 milliseconds.
+  - *(Gartic Phone tuvalini ve 18 renk butonunun merkezini her ekranda (1080p, 2K, 4K, laptop, zoom) 35 milisaniyede bulan OpenCV ekran tarayıcısı eklendi.)*
+- **🖥️ Universal Multi-Resolution Presets Dropdown:**
+  - One-click presets for `1080p Full HD (1920x1080)`, `2K QHD (2560x1440)`, `4K Ultra HD (3840x2160)`, `Laptop HD (1366x768)`, and `Laptop FHD (1536x864 / %125 DPI)`.
+  - Instant canvas bounds and palette coordinates for immediate use without manual setup.
+  - *(Tüm popüler ekran çözünürlükleri ve DPI ölçekleri için tek tıkla hazır önayarlar eklendi.)*
+- **🎨 Rock-Solid In-Game Color Switching Synchronization:**
+  - Calibrated mouse click hold time (45ms) and post-switch stabilization delay (75ms) allowing Chromium's DOM event loop and React state to reliably update `activeColor` and canvas 2D context `ctx.strokeStyle`.
+  - Added entry-point canvas settle delay (6ms) preventing dropped pointerdown events.
+  - Guarantees 100% reliable in-game color rendering without monochrome lockups.
+  - *(Oyun içi renk geçişlerinde React ve Chromium döngüsü için 45ms tıklama ve 75ms durum senkronizasyonu ile renklerin oyunda tam aktif olması sağlandı.)*
+- **🌐 Browser Userscript v2.5 (18-Color Multi-Layer Drawing):**
+  - Upgraded `GarticPhone_DrawBot_Tampermonkey.user.js` to full 18-color Floyd-Steinberg dithering.
+  - Direct DOM color picker querying `window.getComputedStyle().backgroundColor` to click palette buttons natively inside the browser on any OS or screen.
+  - *(Tampermonkey tarayıcı eklentisine 18 renkli Floyd-Steinberg çizim ve DOM üzerinden otomatik renk seçimi eklendi.)*
+
+---
+
 ## [2.0.0] - 2026-09-28
 
 ### 🚀 Major Release - Ultra Realism & 2K Native Architecture

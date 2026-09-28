@@ -1,0 +1,27 @@
+{
+    "canvas_x": 780,
+    "canvas_y": 260,
+    "canvas_w": 1000,
+    "canvas_h": 720,
+    "speed": "Gartic Phone Standart (1.8ms - Önerilen)",
+    "mode": "🌈 Ultra Gerçekçi Çok Renkli (Önerilen - Renkli Portre)",
+    "contrast": 1.35,
+    "brightness": 1.05,
+    "sharpness": 1.85,
+    "saturation": 1.45,
+    "invert": false,
+    "max_dim": 480,
+    "remove_dark_bg": true,
+    "dark_thresh": 65,
+    "enable_contour_reinforce": true,
+    "auto_select_pen": true,
+    "auto_second_monitor": true,
+    "palette_black": [
+        552,
+        382
+    ],
+    "palette_peach": [
+        691,
+        720
+    ]
+}

@@ -242,19 +242,25 @@ class ScreenScannerCV:
                 ch = int(row_step * 17.5)
                 best_canvas = (cx, cy, cw, ch)
 
-            # Pen thickness buttons
-            pen_thin = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.169))
-            pen_medium = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.265))
+            # Toolbar buttons (right side of canvas)
+            pen_tool = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.169))
+            eraser_tool = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.265))
+            bucket_tool = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.355))
+            pen_thin = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.650))
+            pen_medium = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.740))
 
             result = {
                 "canvas": best_canvas,
                 "palette_black": pt_black,
                 "palette_peach": pt_peach,
                 "palette_coords": palette_coords,
+                "pen_tool": pen_tool,
+                "eraser_tool": eraser_tool,
+                "bucket_tool": bucket_tool,
                 "pen_thin": pen_thin,
                 "pen_medium": pen_medium,
             }
-            msg = f"✅ Gartic Phone Algılandı! Tuval: {best_canvas[2]}x{best_canvas[3]}px, 18 Renk Paleti tam kilitlendi."
+            msg = f"✅ Gartic Phone Algılandı! Tuval: {best_canvas[2]}x{best_canvas[3]}px, 18 Renk Paleti ve Araçlar tam kilitlendi."
             return True, msg, result
 
         # If palette was NOT found on screen:
@@ -263,6 +269,34 @@ class ScreenScannerCV:
         preset["palette_coords"] = palette_coords
         msg = f"⚠️ Gartic Phone penceresi görünürde bulunamadı. Ekran çözünürlüğünüze uygun '{preset_name}' ayarı uygulandı."
         return False, msg, preset
+
+    @staticmethod
+    def focus_gartic_browser_window() -> bool:
+        """
+        Finds open browser window running Gartic Phone and brings it cleanly to the foreground.
+        """
+        import win32gui
+        target_hwnd = None
+
+        def _enum_cb(hwnd, _):
+            nonlocal target_hwnd
+            if win32gui.IsWindowVisible(hwnd):
+                title = win32gui.GetWindowText(hwnd).lower()
+                if "gartic" in title:
+                    target_hwnd = hwnd
+                elif target_hwnd is None and any(b in title for b in ["chrome", "edge", "opera", "brave", "firefox"]):
+                    target_hwnd = hwnd
+
+        try:
+            win32gui.EnumWindows(_enum_cb, None)
+            if target_hwnd:
+                user32 = ctypes.windll.user32
+                user32.ShowWindow(target_hwnd, 9)  # SW_RESTORE
+                user32.SetForegroundWindow(target_hwnd)
+                return True
+        except Exception:
+            pass
+        return False
 
     @staticmethod
     def generate_all_palette_coords(pt_black: Tuple[int, int], pt_peach: Tuple[int, int]) -> Dict[str, Tuple[int, int]]:

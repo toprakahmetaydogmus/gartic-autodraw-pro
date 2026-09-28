@@ -19,10 +19,13 @@ from core.path_optimizer import PathOptimizer
 
 class DrawingMode:
     REALISTIC_COLOR = "🌈 Ultra Gerçekçi Çok Renkli (Önerilen - Renkli Portre)"
-    ATKINSON_PHOTOREAL = "Atkinson Fotogerçekçi (Siyah/Beyaz Eskiz)"
-    FLOYD_STEINBERG = "Floyd-Steinberg Detaylı Gölgelendirme"
-    VECTOR_CONTOUR = "Vektör Çizgi Sanatı (Anime/Logo/Karikatür)"
-    CROSS_HATCH = "Sanatsal Karakalem Tarama"
+    ANIME_COLOR = "🎌 Anime / Manga Renkli (Canlı Çizgi & Gölgelendirme)"
+    CYBERPUNK_NEON = "🎭 Siber / Neon Pop-Art (Yüksek Kontrast & Parlak)"
+    PIXEL_ART = "👾 Retro Piksel Sanatı (8-Bit Nostalji)"
+    ATKINSON_PHOTOREAL = "✒️ Atkinson Fotogerçekçi (Siyah/Beyaz Eskiz)"
+    FLOYD_STEINBERG = "🌫️ Floyd-Steinberg Detaylı Gölgelendirme"
+    VECTOR_CONTOUR = "🖋️ Vektör Çizgi Sanatı (Anime/Logo/Karikatür)"
+    CROSS_HATCH = "✏️ Sanatsal Karakalem Tarama"
 
 
 class ImageProcessingEngine:
@@ -203,6 +206,7 @@ class ImageProcessingEngine:
         remove_dark_bg: bool = True,
         dark_thresh: int = 60,
         enable_contour_reinforce: bool = True,
+        target_round_time: float = 72.0,
     ) -> Tuple[List[List[Tuple[int, int]]], Optional[List[str]], Image.Image]:
         """
         Main processing pipeline.
@@ -327,6 +331,151 @@ class ImageProcessingEngine:
 
             preview_pil = Image.fromarray(rendered_rgb)
 
+        elif mode == DrawingMode.ANIME_COLOR:
+            # 1. Bilateral filter for cell-shaded smooth color fields
+            filtered_rgb = cv2.bilateralFilter(rgb_np, d=9, sigmaColor=75, sigmaSpace=75)
+            # 2. Extract sharp lineart edges
+            edges = cv2.Canny(gray_np, 40, 110)
+            if remove_dark_bg:
+                edges[border_bg] = 0
+
+            # 3. Quantize color fields without heavy grain
+            indices, rendered_rgb = self.palette_mgr.quantize_and_dither_image(
+                filtered_rgb, remove_dark_bg=remove_dark_bg, dark_thresh=dark_thresh
+            )
+
+            all_strokes: List[List[Tuple[int, int]]] = []
+            all_colors: List[str] = []
+
+            for col_name in [
+                "skin_peach", "terracotta", "light_gray", "gray", "dark_yellow", "brown",
+                "light_blue", "dark_blue", "light_green", "dark_green", "yellow", "orange",
+                "red", "dark_red", "hot_pink", "magenta", "black"
+            ]:
+                col_idx = PALETTE_NAMES.index(col_name)
+                mask = (indices == col_idx).astype(np.uint8) * 255
+                if np.sum(mask) == 0:
+                    continue
+                col_strokes = PathOptimizer.dither_to_run_length_strokes(mask, min_run_length=min_run_len, max_gap_to_merge=2)
+                col_opt = PathOptimizer.optimize_stroke_order(col_strokes)
+                for s in col_opt:
+                    all_strokes.append(s)
+                    all_colors.append(col_name)
+
+            # Bold black inking contours on top
+            contour_strokes = PathOptimizer.extract_contours_as_strokes(edges, epsilon=0.9, min_contour_len=3)
+            if contour_strokes:
+                contour_opt = PathOptimizer.optimize_stroke_order(contour_strokes)
+                for cs in contour_opt:
+                    all_strokes.append(cs)
+                    all_colors.append("black")
+                rendered_rgb[edges > 0] = [10, 10, 10]
+
+            strokes = all_strokes
+            stroke_colors = all_colors
+            preview_pil = Image.fromarray(rendered_rgb)
+
+        elif mode == DrawingMode.CYBERPUNK_NEON:
+            # High-saturation neon pop art
+            enhanced_neon = self.adjust_image_properties(resized, contrast=1.45, brightness=1.05, sharpness=1.8, saturation=1.65, invert=invert)
+            neon_np = np.array(enhanced_neon)
+            if remove_dark_bg:
+                neon_np[border_bg] = [255, 255, 255]
+
+            indices, rendered_rgb = self.palette_mgr.quantize_and_dither_image(
+                neon_np, remove_dark_bg=remove_dark_bg, dark_thresh=dark_thresh
+            )
+
+            all_strokes: List[List[Tuple[int, int]]] = []
+            all_colors: List[str] = []
+
+            for col_name in [
+                "hot_pink", "light_blue", "yellow", "magenta", "orange", "dark_blue", "light_green", "skin_peach", "black"
+            ]:
+                if col_name not in PALETTE_NAMES:
+                    continue
+                col_idx = PALETTE_NAMES.index(col_name)
+                mask = (indices == col_idx).astype(np.uint8) * 255
+                if np.sum(mask) == 0:
+                    continue
+                col_strokes = PathOptimizer.dither_to_run_length_strokes(mask, min_run_length=min_run_len, max_gap_to_merge=1)
+                col_opt = PathOptimizer.optimize_stroke_order(col_strokes)
+                for s in col_opt:
+                    all_strokes.append(s)
+                    all_colors.append(col_name)
+
+            edges = cv2.Canny(gray_np, 45, 125)
+            if remove_dark_bg:
+                edges[border_bg] = 0
+            contour_strokes = PathOptimizer.extract_contours_as_strokes(edges, epsilon=0.9)
+            if contour_strokes:
+                contour_opt = PathOptimizer.optimize_stroke_order(contour_strokes)
+                for cs in contour_opt:
+                    all_strokes.append(cs)
+                    all_colors.append("black")
+                rendered_rgb[edges > 0] = [10, 10, 10]
+
+            strokes = all_strokes
+            stroke_colors = all_colors
+            preview_pil = Image.fromarray(rendered_rgb)
+
+        elif mode == DrawingMode.PIXEL_ART:
+            # 64px pixel block downsampling
+            p_dim = 64
+            scale = p_dim / float(max(w, h))
+            pw, ph = max(1, int(w * scale)), max(1, int(h * scale))
+            small = cv2.resize(rgb_np, (pw, ph), interpolation=cv2.INTER_AREA)
+
+            # Quantize each pixel to nearest Gartic color
+            pixel_indices = np.zeros((ph, pw), dtype=np.uint8)
+            rendered_pixels = np.full((ph, pw, 3), 255, dtype=np.uint8)
+
+            for py in range(ph):
+                for px in range(pw):
+                    cname, crgb = GarticPaletteManager.match_nearest_palette_color(tuple(small[py, px]))
+                    cidx = PALETTE_NAMES.index(cname)
+                    pixel_indices[py, px] = cidx
+                    rendered_pixels[py, px] = crgb
+
+            # Scale up to canvas size
+            scale_x = w / float(pw)
+            scale_y = h / float(ph)
+
+            # Group by color and merge contiguous horizontal runs for ultra-fast drawing
+            all_strokes: List[List[Tuple[int, int]]] = []
+            all_colors: List[str] = []
+
+            for col_name in PALETTE_NAMES:
+                if col_name == "white":
+                    continue
+                col_idx = PALETTE_NAMES.index(col_name)
+                col_runs: List[List[Tuple[int, int]]] = []
+                for py in range(ph):
+                    px = 0
+                    while px < pw:
+                        if pixel_indices[py, px] == col_idx:
+                            run_start = px
+                            while px < pw and pixel_indices[py, px] == col_idx:
+                                px += 1
+                            run_end = px
+                            rx0 = int(round(run_start * scale_x))
+                            rx1 = int(round(run_end * scale_x))
+                            ry = int(round((py + 0.5) * scale_y))
+                            col_runs.append([(rx0, ry), (rx1, ry)])
+                        else:
+                            px += 1
+
+                if col_runs:
+                    opt_runs = PathOptimizer.optimize_stroke_order(col_runs)
+                    for r in opt_runs:
+                        all_strokes.append(r)
+                        all_colors.append(col_name)
+
+            strokes = all_strokes
+            stroke_colors = all_colors
+            preview_upscaled = cv2.resize(rendered_pixels, (w, h), interpolation=cv2.INTER_NEAREST)
+            preview_pil = Image.fromarray(preview_upscaled)
+
         elif mode == DrawingMode.ATKINSON_PHOTOREAL:
             binary = self.atkinson_dither(gray_np)
             raw_strokes = PathOptimizer.dither_to_run_length_strokes(
@@ -379,6 +528,12 @@ class ImageProcessingEngine:
             strokes = strokes[:max_strokes]
             if stroke_colors:
                 stroke_colors = stroke_colors[:max_strokes]
+
+        # Adaptive Time Budget Compression (Guarantee round completion within target time)
+        if target_round_time > 0 and strokes:
+            strokes, stroke_colors = PathOptimizer.fit_strokes_to_time_budget(
+                strokes, stroke_colors, target_time_sec=target_round_time
+            )
 
         return strokes, stroke_colors, preview_pil
 

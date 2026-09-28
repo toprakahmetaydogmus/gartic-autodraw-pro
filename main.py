@@ -21,9 +21,17 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Enable Windows High DPI Awareness to guarantee pixel-perfect multi-monitor coordinate alignment
 try:
-    ctypes.windll.user32.SetProcessDPIAware()
+    # Per-monitor DPI awareness v2 (Windows 10 1703+)
+    ctypes.windll.user32.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
 except Exception:
-    pass
+    try:
+        # Per-monitor DPI awareness (Windows 8.1+)
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+    except Exception:
+        try:
+            ctypes.windll.user32.SetProcessDPIAware()
+        except Exception:
+            pass
 
 from gui.app import GarticAutoDrawApp
 

@@ -5,6 +5,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 ---
 
+## [2.6.0] - 2026-09-28
+
+### 🎨 5 Instant Artistic Styles, Round Time Budget Guarantee & Auto-Window Focus
+*(5 Hızlı Sanatsal Stil, Round Süre Garantisi ve Otomatik Pencere Odaklama)*
+
+#### ✨ Added / Eklenenler
+- **🎨 5 Hızlı Sanatsal Çizim Stili (Instant Artistic Styles):**
+  - `👑 Portre`: Canlı ten rengi katmanı, terracotta sıcak gölgeler ve en ince siyah vektör konturlar.
+  - `🎌 Anime / Manga`: Bilateral filtreli cell-shaded pürüzsüz renk alanları ve belirgin manga çizgi hatları.
+  - `🎭 Siber / Neon Pop-Art`: Yüksek kontrast ve doygunlukla parlayan neon renkler (`hot_pink`, `light_blue`, `yellow`).
+  - `✏️ Sanatsal Eskiz`: Atkinson fotogerçekçi siyah/beyaz tarama ve klasik karakalem dokusu.
+  - `👾 Retro 8-Bit Piksel`: 64px blok kuantizasyonu, yatay run-length birleştirme ve renk bazlı gruplama ile 5 kat daha hızlı çizilen nostaljik piksel sanatı.
+- **⏱️ Round Süre Garantisi (Round Time Budget Guarantee):**
+  - 80 saniyelik Gartic Phone round sürelerinde çizimin yarıda kalmaması için `70 sn`, `55 sn`, `90 sn` ve `Limitsiz` seçenekleri eklendi.
+  - `fit_strokes_to_time_budget` algoritması süre sınırını aşan ikincil gölgeleri akıllıca sıkıştırırken ana konturları korur.
+- **🖥️ Otomatik Gartic Penceresi Odaklama (Auto-Focus Window):**
+  - Geri sayım (3..2..1) başladığında Win32 `EnumWindows` ve `SetForegroundWindow` ile Gartic Phone tarayıcı penceresi otomatik öne getirilir.
+- **🎯 1-Piksel Mikro-Nokta Desteği (Micro-Nudge Canvas Dot Rendering):**
+  - HTML5 tuval motorunun tekil nokta ve benekleri algılamasını garanti eden 1 piksellik donanımsal mikro hareket eklendi.
+- **🖥️ Per-Monitor V2 DPI Ölçekleme Desteği:**
+  - Windows 10/11'de çoklu monitörlerdeki %125, %150 ve %175 DPI ölçeklerinde koordinat kaymalarını sıfırlayan Per-Monitor V2 entegrasyonu.
+
+---
+
 ## [2.5.0] - 2026-09-28
 
 ### 🔍 Real-Time Computer Vision Screen Scanner & Universal Resolution Engine

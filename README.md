@@ -63,25 +63,36 @@ Artık ekran çözünürlüğünüz, Windows DPI ölçeklemeniz (%100, %125, %15
 - **Hazır Çözünürlük Önayarları:** Açılır menüden `1080p Full HD`, `2K QHD (2560x1440)`, `4K Ultra HD` veya `Laptop (1366x768 / 1536x864)` modunu tek tıkla seçebilirsiniz.
 - **Kusursuz Renk Geçişleri:** 45ms tıklama süresi ve 75ms React durum stabilizasyonu sayesinde çizim esnasında renkler oyunda takılmadan, atlamadan tam zamanında değişir.
 
-### 1. 👑 Tek Tıkla "ULTRA MAX PRO KALİTE" Modu
-Arayüzdeki tek bir butonla tüm parametreler profesyonel seviyeye çıkarılır:
-- **480 px Ultra HD Detay:** Göz bebekleri, kirpikler, dudak kıvrımları ve kulaklık parlamaları en yüksek çözünürlükle taranır.
-- **1.85x Keskinlik & 1.45x Doygunluk:** Donuk veya karanlık fotoğraflar stüdyo aydınlatmasına kavuşur.
-- **Vektörel Çizgi Sanatı Katmanı:** Renkli zemin doldurulduktan sonra en son katmanda en ince siyah kalemle yüz hatları çizilir.
+### 1. 👑 Tek Tıkla "ULTRA MAX PRO KALİTE" ve 5 Hızlı Sanatsal Stil
+Arayüzdeki hazır stil butonlarıyla istediğiniz sanat tarzını tek tıkla uygulayabilirsiniz:
+- **👑 Portre (Ultra Max):** 480px Ultra HD detay, göz bebekleri, kirpikler, canlı ten rengi katmanı ve en ince siyah vektör konturlar.
+- **🎌 Anime / Manga:** Bilateral filtreli cell-shaded pürüzsüz ten alanları, canlı renkler ve keskin manga çizgi hatları.
+- **🎭 Siber / Neon Pop-Art:** Yüksek kontrast ve doygunlukla parlayan neon renkler (`hot_pink`, `light_blue`, `yellow`) ve koyu arka plan temizliği.
+- **✏️ Sanatsal Eskiz:** Atkinson fotogerçekçi siyah/beyaz tarama, klasik karakalem dokusu.
+- **👾 Retro 8-Bit Piksel:** 64px blok kuantizasyonu, yatay run-length birleştirme ve renk bazlı gruplama ile 5 kat daha hızlı çizilen nostaljik piksel sanatı.
 
-### 2. 🧹 Akıllı Kenar & Arka Plan Ayıklayıcı (Smart Background Cleaning)
+### 2. ⏱️ Round Süre Garantisi (Gartic Phone 80s Zaman Yönetimi)
+Gartic Phone oyununda round süreleri genellikle 80 saniyedir. Çiziminizin süre bitmeden önce %100 tamamlanması için:
+- **70 sn (Önerilen):** Çizgileri 70 saniyeye göre akıllıca ölçekler; sürenin bitmesine 10 saniye kala çizimi tamamlayarak çizimin kaybolmasını önler.
+- **55 sn (Hızlı Round):** Hızlı oyun odaları için optimize edilmiş süper hızlı mod.
+- **90 sn & Limitsiz:** Özel odalar ve maksimum detay isteyenler için sınırsız çizgi modu.
+
+### 3. 🖥️ Otomatik Pencere Odaklama (Auto-Focus Window)
+Geri sayım başladığında (3..2..1) Win32 API'leri aracılığıyla açık olan Gartic Phone tarayıcı penceresi otomatik olarak öne getirilir ve odaklanır; kullanıcının manuel olarak pencere değiştirmesine gerek kalmaz.
+
+### 4. 🧹 Akıllı Kenar & Arka Plan Ayıklayıcı (Smart Background Cleaning)
 Web kamerasından veya Discord üzerinden aldığınız ekran görüntülerinde arka planda kalan karanlık oda, monitör ışığı veya pencere sınırları:
 - Otomatik olarak tespit edilir ve **beyaz kağıt (tuval)** kabul edilir.
 - Tuvale tek bir gereksiz arka plan çizgisi atılmaz; 80 saniyelik round süresi yalnızca karaktere/nesneye ayrılır.
 
-### 3. 🎨 18 Renk Perceptual Dithering & Doğal Gölgelendirme
+### 5. 🎨 18 Renk Perceptual Dithering & Doğal Gölgelendirme
 İnsan gözünün renklere olan hassasiyeti doğrultusunda:
 - Yüz piksellerinde soğuk gri ve lacivert tonlar engellenir.
 - `skin_peach` (açık ten), `terracotta` (sıcak yanak/burun gölgesi) ve `brown` (saç ve derin gölgeler) katman katman işlenir.
 - Kulaklık RGB LED'leri, giysiler ve aksesuarlar gerçek renkleriyle parlar.
 
-### 4. ⚡ Win32 C Low-Level Mouse Interrupter
-Python'ın standart `time.sleep` fonksiyonu Windows'ta 15.6ms çözünürlüğe sahiptir. Bu araç, Windows `winmm.dll` üzerinden multimedya zamanlayıcısını `1ms` çözünürlüğe kilitler (`timeBeginPeriod(1)`). Doğrudan `user32.dll:mouse_event` çağrılarıyla fare donanım seviyesinde hareket ettirilir.
+### 6. ⚡ Win32 C Low-Level Mouse Interrupter & Mikro-Nokta Desteği
+Python'ın standart `time.sleep` fonksiyonu Windows'ta 15.6ms gecikmeye sahiptir. Bu araç, Windows `winmm.dll` üzerinden multimedya zamanlayıcısını `1ms` çözünürlüğe kilitler (`timeBeginPeriod(1)`). Doğrudan `user32.dll:mouse_event` çağrılarıyla fare donanım seviyesinde hareket ettirilir. Tekil benekler ve noktalar için 1 piksellik donanımsal mikro hareket uygulanarak HTML5 tuvalinde noktanın kesin olarak çizilmesi sağlanır.
 
 ---
 

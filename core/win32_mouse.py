@@ -174,7 +174,16 @@ class Win32MouseController:
         # Move to start of stroke
         start_x, start_y = points[0]
         self.set_cursor_pos(start_x, start_y)
-        time.sleep(0.006)
+        time.sleep(0.005)
+
+        if len(points) == 1:
+            self.mouse_down()
+            time.sleep(0.004)
+            # Micro-nudge 1px so HTML5 canvas renders a round dot
+            self.set_cursor_pos(start_x + 1, start_y)
+            time.sleep(0.003)
+            self.mouse_up()
+            return True
 
         self.mouse_down()
 

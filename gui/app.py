@@ -431,12 +431,40 @@ class GarticAutoDrawApp(ctk.CTk):
         )
         btn_ultra_max.pack(fill="x", padx=12, pady=(6, 8))
 
-        # Mode Selector (Default to REALISTIC_COLOR)
-        ctk.CTkLabel(box, text="Çizim Modu / Algoritma:", font=ctk.CTkFont(size=12, weight="bold")).pack(anchor="w", padx=12, pady=(4, 2))
+        # Quick Artistic Styles Bar
+        ctk.CTkLabel(box, text="🎨 Hızlı Sanatsal Stiller:", font=ctk.CTkFont(size=12, weight="bold"), text_color="#38bdf8").pack(anchor="w", padx=12, pady=(4, 2))
+        style_bar = ctk.CTkFrame(box, fg_color="transparent")
+        style_bar.pack(fill="x", padx=10, pady=(2, 6))
+
+        styles = [
+            ("👑 Portre", "portrait", "#8b5cf6"),
+            ("🎌 Anime", "anime", "#ec4899"),
+            ("🎭 Neon", "neon", "#06b6d4"),
+            ("✏️ Eskiz", "sketch", "#64748b"),
+            ("👾 Piksel", "pixel", "#10b981"),
+        ]
+        for title, key, color in styles:
+            s_btn = ctk.CTkButton(
+                style_bar,
+                text=title,
+                font=ctk.CTkFont(size=11, weight="bold"),
+                fg_color=color,
+                hover_color=color,
+                width=55,
+                height=28,
+                command=lambda k=key: self.apply_style_preset(k),
+            )
+            s_btn.pack(side="left", padx=2, expand=True, fill="x")
+
+        # Mode Selector (All 8 Advanced Algorithmic Modes)
+        ctk.CTkLabel(box, text="Detaylı Çizim Modu / Algoritma:", font=ctk.CTkFont(size=12, weight="bold")).pack(anchor="w", padx=12, pady=(4, 2))
         self.mode_selector = ctk.CTkOptionMenu(
             box,
             values=[
                 DrawingMode.REALISTIC_COLOR,
+                DrawingMode.ANIME_COLOR,
+                DrawingMode.CYBERPUNK_NEON,
+                DrawingMode.PIXEL_ART,
                 DrawingMode.ATKINSON_PHOTOREAL,
                 DrawingMode.FLOYD_STEINBERG,
                 DrawingMode.VECTOR_CONTOUR,
@@ -448,6 +476,24 @@ class GarticAutoDrawApp(ctk.CTk):
         )
         self.mode_selector.set(self.settings.get("mode", DrawingMode.REALISTIC_COLOR))
         self.mode_selector.pack(fill="x", padx=12, pady=4)
+
+        # Round Time Budget Guarantee Dropdown
+        ctk.CTkLabel(box, text="⏱️ Round Süre Garantisi (Otomatik Sığdır):", font=ctk.CTkFont(size=11, weight="bold"), text_color="#f59e0b").pack(anchor="w", padx=12, pady=(4, 2))
+        self.combo_round_time = ctk.CTkComboBox(
+            box,
+            values=[
+                "70 sn (80s Round İçin - Önerilen)",
+                "55 sn (Hızlı Round)",
+                "90 sn (Uzun Round)",
+                "Limitsiz (Maksimum Detay)",
+            ],
+            command=lambda v: self.reprocess_image_async(),
+            font=ctk.CTkFont(size=11),
+            fg_color="#1e293b",
+            button_color="#334155",
+        )
+        self.combo_round_time.set("70 sn (80s Round İçin - Önerilen)")
+        self.combo_round_time.pack(fill="x", padx=12, pady=4)
 
         # Clean Dark Background Switch (Key for dark room / Discord screenshots!)
         self.switch_clean_bg = ctk.CTkSwitch(
@@ -1053,6 +1099,52 @@ class GarticAutoDrawApp(ctk.CTk):
             text_color="#10b981",
         )
 
+    def apply_style_preset(self, style: str):
+        """Applies high-impact artistic styles with 1 click."""
+        if style == "portrait":
+            self.mode_selector.set(DrawingMode.REALISTIC_COLOR)
+            self.slider_contrast.set(1.30)
+            self.slider_saturation.set(1.35)
+            self.slider_sharpness.set(1.50)
+            self.slider_brightness.set(1.05)
+            self.slider_max_dim.set(420)
+            self.switch_clean_bg.select()
+            msg = "👑 Ultra Realist Portre Modu Aktif! (Canlı ten & terracotta gölgeler)"
+        elif style == "anime":
+            self.mode_selector.set(DrawingMode.ANIME_COLOR)
+            self.slider_contrast.set(1.25)
+            self.slider_saturation.set(1.45)
+            self.slider_sharpness.set(1.65)
+            self.slider_brightness.set(1.05)
+            self.slider_max_dim.set(400)
+            self.switch_clean_bg.select()
+            msg = "🎌 Anime & Manga Çizgi Sanatı Modu Aktif! (Cell-shading & kalın hatlar)"
+        elif style == "neon":
+            self.mode_selector.set(DrawingMode.CYBERPUNK_NEON)
+            self.slider_contrast.set(1.45)
+            self.slider_saturation.set(1.65)
+            self.slider_sharpness.set(1.80)
+            self.slider_brightness.set(1.05)
+            self.slider_max_dim.set(400)
+            msg = "🎭 Siber / Neon Pop-Art Modu Aktif! (Yüksek kontrast & parlak neon)"
+        elif style == "sketch":
+            self.mode_selector.set(DrawingMode.CROSS_HATCH)
+            self.slider_contrast.set(1.40)
+            self.slider_sharpness.set(1.85)
+            self.slider_max_dim.set(380)
+            msg = "✏️ Sanatsal Karakalem Eskiz Modu Aktif! (Çapraz tarama gölgeler)"
+        elif style == "pixel":
+            self.mode_selector.set(DrawingMode.PIXEL_ART)
+            self.slider_contrast.set(1.30)
+            self.slider_saturation.set(1.40)
+            self.slider_max_dim.set(320)
+            msg = "👾 Retro 8-Bit Piksel Sanatı Modu Aktif! (Nostaljik piksel blokları)"
+        else:
+            return
+
+        self.reprocess_image_async()
+        self.lbl_progress_status.configure(text=msg, text_color="#10b981")
+
     def reprocess_image_async(self):
         """Runs the vision pipeline in a background thread without blocking UI."""
         if self.current_image is None or self.is_processing:
@@ -1072,6 +1164,16 @@ class GarticAutoDrawApp(ctk.CTk):
         dark_thresh = int(self.slider_dark_thresh.get())
         reinforce = bool(self.switch_reinforce.get()) if hasattr(self, "switch_reinforce") else True
 
+        round_choice = self.combo_round_time.get() if hasattr(self, "combo_round_time") else "70 sn"
+        if "55" in round_choice:
+            target_time = 55.0
+        elif "70" in round_choice:
+            target_time = 72.0
+        elif "90" in round_choice:
+            target_time = 92.0
+        else:
+            target_time = 0.0
+
         p_delay = self.active_p_delay
         s_delay = self.active_s_delay
 
@@ -1089,6 +1191,7 @@ class GarticAutoDrawApp(ctk.CTk):
                     remove_dark_bg=remove_dark_bg,
                     dark_thresh=dark_thresh,
                     enable_contour_reinforce=reinforce,
+                    target_round_time=target_time,
                 )
 
                 total_pts = sum(len(s) for s in strokes)
@@ -1209,6 +1312,12 @@ class GarticAutoDrawApp(ctk.CTk):
         self.btn_start.configure(state="disabled")
 
         def _countdown_worker():
+            # Automatically activate Gartic browser window so drawing clicks hit the canvas
+            try:
+                ScreenScannerCV.focus_gartic_browser_window()
+            except Exception:
+                pass
+
             for sec in [3, 2, 1]:
                 if self.mouse_ctrl.should_abort:
                     self.is_counting_down = False
@@ -1218,7 +1327,7 @@ class GarticAutoDrawApp(ctk.CTk):
                     winsound.Beep(900 + (3 - sec) * 200, 120)
                 except Exception:
                     pass
-                msg = f"⏳ {sec} SANİYE İÇİNDE BAŞLIYOR! (Gartic tuvaline bakın...)"
+                msg = f"⏳ {sec} SANİYE İÇİNDE BAŞLIYOR! (Gartic penceresi öne alındı...)"
                 self.after(0, lambda m=msg: self.lbl_progress_status.configure(text=m, text_color="#f59e0b"))
                 time.sleep(1.0)
 

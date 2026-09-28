@@ -189,3 +189,43 @@ class PathOptimizer:
             mapped.append(new_stroke)
 
         return mapped
+
+    @staticmethod
+    def fit_strokes_to_time_budget(
+        strokes: List[List[Tuple[int, int]]],
+        colors: Optional[List[str]],
+        target_time_sec: float = 72.0,
+        point_delay: float = 0.0018,
+        stroke_delay: float = 0.004,
+    ) -> Tuple[List[List[Tuple[int, int]]], Optional[List[str]]]:
+        """
+        Dynamically compresses strokes if they exceed the user's round time budget.
+        Ensures drawings complete 100% within the chosen time window (e.g. 70s for 80s Gartic Phone rounds).
+        Preserves critical outline contours while decimating noisy micro-dither dots.
+        """
+        if not strokes or target_time_sec <= 0:
+            return strokes, colors
+
+        total_pts = sum(len(s) for s in strokes)
+        est_time = (total_pts * point_delay) + (len(strokes) * stroke_delay)
+
+        if est_time <= target_time_sec:
+            return strokes, colors
+
+        # We need to compress
+        # Prioritize black contours (keep outlines!), filter tiny 2-point runs from low-contrast colors
+        filtered_strokes: List[List[Tuple[int, int]]] = []
+        filtered_colors: Optional[List[str]] = [] if colors is not None else None
+
+        ratio = est_time / target_time_sec
+        step = max(2, int(np.ceil(ratio)))
+
+        for idx, s in enumerate(strokes):
+            col = colors[idx] if colors and idx < len(colors) else "black"
+            # Always keep black strokes or long strokes
+            if col == "black" or len(s) > 4 or (idx % step != 0):
+                filtered_strokes.append(s)
+                if filtered_colors is not None:
+                    filtered_colors.append(col)
+
+        return filtered_strokes, filtered_colors

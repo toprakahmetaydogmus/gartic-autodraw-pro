@@ -97,6 +97,7 @@ class GarticAutoDrawApp(ctk.CTk):
             on_emergency_stop=self.emergency_stop,
             on_test_bounds=self.test_canvas_bounds,
             on_calibrate=self.open_two_click_calibration,
+            on_test_pen=self.test_pen_tool,
         )
         self.hotkeys.start()
 
@@ -261,6 +262,19 @@ class GarticAutoDrawApp(ctk.CTk):
             height=36,
         )
         self.btn_test_palette.pack(side="left", padx=3, pady=12)
+
+        # Pen & Tools Test Button
+        self.btn_test_pen = ctk.CTkButton(
+            self.header_frame,
+            text="✏️ Kalemi Test Et (F7)",
+            font=ctk.CTkFont(family="Segoe UI", size=12, weight="bold"),
+            fg_color="#0284c7",
+            hover_color="#0369a1",
+            command=self.test_pen_tool,
+            width=145,
+            height=36,
+        )
+        self.btn_test_pen.pack(side="left", padx=3, pady=12)
 
         # Multi-Monitor Action Button
         self.btn_monitor2 = ctk.CTkButton(
@@ -899,6 +913,70 @@ class GarticAutoDrawApp(ctk.CTk):
             )
         threading.Thread(target=_worker, daemon=True).start()
 
+    def test_pen_tool(self):
+        """
+        Visually moves mouse directly to Pen Tool (Row 0, Col 0 - Pencil),
+        Extra-Fine Brush Dot 1, and Black color in Gartic Phone so the user
+        can see the cursor hit the exact right tools live without misclicking.
+        """
+        cx = self.settings.get("canvas_x", 490)
+        cy = self.settings.get("canvas_y", 220)
+        cw = self.settings.get("canvas_w", 1560)
+        ch = self.settings.get("canvas_h", 1050)
+        pen_x = self.settings.get("pen_tool", [int(round(cx + cw + (cw * 0.0590))), int(round(cy + (ch * 0.3667)))])[0]
+        pen_y = self.settings.get("pen_tool", [int(round(cx + cw + (cw * 0.0590))), int(round(cy + (ch * 0.3667)))])[1]
+        dot1_x = self.settings.get("brush_dot1", [int(round(cx + (cw * 0.1090))), int(round(cy + (ch * 1.0743)))])[0]
+        dot1_y = self.settings.get("brush_dot1", [int(round(cx + (cw * 0.1090))), int(round(cy + (ch * 1.0743)))])[1]
+        black_coord = self.settings.get("palette_black", [155, 598])
+
+        def _worker():
+            # 1. Pen Tool (Row 0, Col 0)
+            self.lbl_progress_status.configure(
+                text=f"✏️ [F7] Kalem Aracı (Row 0, Col 0 - Kalem) Seçiliyor: ({pen_x}, {pen_y})",
+                text_color="#38bdf8",
+            )
+            self.mouse_ctrl.set_cursor_pos(pen_x, pen_y)
+            time.sleep(0.12)
+            self.mouse_ctrl.mouse_down()
+            time.sleep(0.06)
+            self.mouse_ctrl.mouse_up()
+            time.sleep(0.35)
+
+            # 2. Extra Fine Brush Dot 1
+            self.lbl_progress_status.configure(
+                text=f"🖌️ [F7] İnce Fırça Boyutu (Dot 1) Seçiliyor: ({dot1_x}, {dot1_y})",
+                text_color="#38bdf8",
+            )
+            self.mouse_ctrl.set_cursor_pos(dot1_x, dot1_y)
+            time.sleep(0.12)
+            self.mouse_ctrl.mouse_down()
+            time.sleep(0.06)
+            self.mouse_ctrl.mouse_up()
+            time.sleep(0.35)
+
+            # 3. Black color in palette
+            self.lbl_progress_status.configure(
+                text=f"🎨 [F7] Siyah Renk Seçiliyor: ({black_coord[0]}, {black_coord[1]})",
+                text_color="#38bdf8",
+            )
+            self.mouse_ctrl.set_cursor_pos(black_coord[0], black_coord[1])
+            time.sleep(0.12)
+            self.mouse_ctrl.mouse_down()
+            time.sleep(0.06)
+            self.mouse_ctrl.mouse_up()
+            time.sleep(0.2)
+
+            self.lbl_progress_status.configure(
+                text="✅ Kalem Aracı & İnce Fırça Başarıyla Seçildi! Çember/Daire değil, gerçek Kalem devrede.",
+                text_color="#10b981",
+            )
+            try:
+                winsound.Beep(1800, 200)
+            except Exception:
+                pass
+
+        threading.Thread(target=_worker, daemon=True).start()
+
     def toggle_monitor_placement(self):
         """Switches window between Monitor 1 and Monitor 2 cleanly."""
         try:
@@ -1355,9 +1433,9 @@ class GarticAutoDrawApp(ctk.CTk):
 
         # Auto-select Thin Pen tool on Gartic Phone right toolbar AND Extra Fine Brush size (Dot 1) on bottom toolbar
         if hasattr(self, "switch_auto_pen") and self.switch_auto_pen.get():
-            # 1. Select Pen Tool on right toolbar
-            pen_x = self.settings.get("pen_tool", [int(round(cx + cw + (cw * 0.1141))), int(round(cy + (ch * 0.3952)))])[0]
-            pen_y = self.settings.get("pen_tool", [int(round(cx + cw + (cw * 0.1141))), int(round(cy + (ch * 0.3952)))])[1]
+            # 1. Select Pen Tool on right toolbar (Row 0, Col 0 - Pencil)
+            pen_x = self.settings.get("pen_tool", [int(round(cx + cw + (cw * 0.0590))), int(round(cy + (ch * 0.3667)))])[0]
+            pen_y = self.settings.get("pen_tool", [int(round(cx + cw + (cw * 0.0590))), int(round(cy + (ch * 0.3667)))])[1]
             self.mouse_ctrl.set_cursor_pos(pen_x, pen_y)
             time.sleep(0.04)
             self.mouse_ctrl.mouse_down()
@@ -1366,8 +1444,8 @@ class GarticAutoDrawApp(ctk.CTk):
             time.sleep(0.06)
 
             # 2. Select Extra Fine Brush Size (Dot 1) on bottom toolbar so lines are razor-sharp!
-            dot1_x = self.settings.get("brush_dot1", [int(round(cx + (cw * 0.0513))), int(round(cy + (ch * 1.0790)))])[0]
-            dot1_y = self.settings.get("brush_dot1", [int(round(cx + (cw * 0.0513))), int(round(cy + (ch * 1.0790)))])[1]
+            dot1_x = self.settings.get("brush_dot1", [int(round(cx + (cw * 0.1090))), int(round(cy + (ch * 1.0743)))])[0]
+            dot1_y = self.settings.get("brush_dot1", [int(round(cx + (cw * 0.1090))), int(round(cy + (ch * 1.0743)))])[1]
             self.mouse_ctrl.set_cursor_pos(dot1_x, dot1_y)
             time.sleep(0.04)
             self.mouse_ctrl.mouse_down()

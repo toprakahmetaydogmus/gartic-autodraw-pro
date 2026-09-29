@@ -27,36 +27,36 @@ class ScreenResolutionPresets:
             "canvas": (490, 220, 1560, 1050),
             "palette_black": (155, 598),
             "palette_peach": (335, 1115),
-            "pen_thin": (2238, 635),
-            "pen_medium": (570, 1353),
+            "pen_thin": (2142, 605),
+            "pen_medium": (660, 1348),
         },
         "1080p Full HD (1920x1080)": {
             "canvas": (368, 165, 1170, 788),
             "palette_black": (116, 449),
             "palette_peach": (251, 836),
-            "pen_thin": (1679, 476),
-            "pen_medium": (428, 1015),
+            "pen_thin": (1606, 454),
+            "pen_medium": (495, 1011),
         },
         "4K Ultra HD (3840x2160)": {
             "canvas": (735, 330, 2340, 1575),
             "palette_black": (233, 897),
             "palette_peach": (503, 1673),
-            "pen_thin": (3357, 953),
-            "pen_medium": (855, 2030),
+            "pen_thin": (3213, 908),
+            "pen_medium": (990, 2022),
         },
         "Laptop HD (1366x768)": {
             "canvas": (261, 117, 832, 560),
             "palette_black": (83, 319),
             "palette_peach": (179, 595),
-            "pen_thin": (1194, 339),
-            "pen_medium": (304, 722),
+            "pen_thin": (1143, 323),
+            "pen_medium": (352, 719),
         },
         "Laptop FHD (1536x864 / %125 DPI)": {
             "canvas": (294, 132, 936, 630),
             "palette_black": (93, 359),
             "palette_peach": (201, 669),
-            "pen_thin": (1343, 381),
-            "pen_medium": (342, 812),
+            "pen_thin": (1285, 363),
+            "pen_medium": (396, 809),
         },
     }
 
@@ -242,12 +242,12 @@ class ScreenScannerCV:
                 ch = int(row_step * 17.5)
                 best_canvas = (cx, cy, cw, ch)
 
-            # Toolbar buttons (right side of canvas)
-            pen_tool = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.169))
-            eraser_tool = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.265))
-            bucket_tool = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.355))
-            pen_thin = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.650))
-            pen_medium = (int(cx + cw + col_step * 0.8), int(cy + ch * 0.740))
+            # Toolbar buttons (right side of canvas): Pen is Row 0 Col 0, aligned with Palette Row 0 (pt_black[1] + 7)
+            pen_tool = (int(cx + cw + col_step * 1.02), int(pt_black[1] + 7))
+            eraser_tool = (int(cx + cw + col_step * 2.12), int(pt_black[1] + 7))
+            bucket_tool = (int(cx + cw + col_step * 2.12), int(pt_black[1] + row_step * 3.1))
+            pen_thin = pen_tool
+            pen_medium = (int(cx + cw * 0.109), int(cy + ch * 1.074))
 
             result = {
                 "canvas": best_canvas,

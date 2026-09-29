@@ -25,12 +25,14 @@ class GlobalHotkeyManager:
         on_emergency_stop: Optional[Callable[[], None]] = None,
         on_test_bounds: Optional[Callable[[], None]] = None,
         on_calibrate: Optional[Callable[[], None]] = None,
+        on_test_pen: Optional[Callable[[], None]] = None,
     ):
         self.on_start = on_start
         self.on_pause_toggle = on_pause_toggle
         self.on_emergency_stop = on_emergency_stop
         self.on_test_bounds = on_test_bounds
         self.on_calibrate = on_calibrate
+        self.on_test_pen = on_test_pen
         self.listener: Optional[keyboard.Listener] = None
 
     def start(self):
@@ -41,7 +43,9 @@ class GlobalHotkeyManager:
                     if self.on_calibrate:
                         self.on_calibrate()
                 elif key == keyboard.Key.f7:
-                    if self.on_test_bounds:
+                    if self.on_test_pen:
+                        self.on_test_pen()
+                    elif self.on_test_bounds:
                         self.on_test_bounds()
                 elif key == keyboard.Key.f8:
                     if self.on_start:

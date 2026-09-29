@@ -3,16 +3,16 @@
     "canvas_y": 220,
     "canvas_w": 1560,
     "canvas_h": 1050,
-    "speed": "Gartic Phone Standart (1.8ms - Önerilen)",
-    "mode": "🌈 Ultra Gerçekçi Çok Renkli (Önerilen - Renkli Portre)",
-    "contrast": 1.30,
-    "brightness": 1.05,
-    "sharpness": 1.6,
-    "saturation": 1.45,
+    "speed": "Gartic Phone Standart (1.8ms - \u00d6nerilen)",
+    "mode": "\ud83c\udf08 Ultra Ger\u00e7ek\u00e7i \u00c7ok Renkli (\u00d6nerilen - Renkli Portre)",
+    "contrast": 1.2999999999999998,
+    "brightness": 1.02,
+    "sharpness": 1.5999999999999999,
+    "saturation": 1.5,
     "invert": false,
     "max_dim": 450,
     "remove_dark_bg": false,
-    "dark_thresh": 35,
+    "dark_thresh": 36,
     "enable_contour_reinforce": true,
     "auto_select_pen": true,
     "auto_second_monitor": true,
@@ -25,11 +25,11 @@
         1115
     ],
     "pen_tool": [
-        2238,
-        635
+        2142,
+        605
     ],
     "brush_dot1": [
-        570,
-        1353
+        660,
+        1348
     ]
 }

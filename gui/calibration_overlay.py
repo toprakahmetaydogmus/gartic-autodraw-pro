@@ -38,11 +38,11 @@ class CanvasCalibrator:
 
     def set_2k_preset(self):
         """Sets true centered Gartic Phone notebook canvas bounds on 2560x1440 2K display."""
-        self.set_bounds(780, 260, 1000, 720)
+        self.set_bounds(490, 220, 1560, 1050)
 
     def set_1080p_preset(self):
         """Sets standard Gartic Phone canvas position for maximized browser on 1920x1080 display."""
-        self.set_bounds(160, 180, 1600, 850)
+        self.set_bounds(368, 165, 1170, 788)
 
     def test_canvas_bounds_visual(self, speed_delay: float = 0.003):
         """

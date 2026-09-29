@@ -1,27 +1,35 @@
 {
-    "canvas_x": 780,
-    "canvas_y": 260,
-    "canvas_w": 1000,
-    "canvas_h": 720,
+    "canvas_x": 490,
+    "canvas_y": 220,
+    "canvas_w": 1560,
+    "canvas_h": 1050,
     "speed": "Gartic Phone Standart (1.8ms - Önerilen)",
     "mode": "🌈 Ultra Gerçekçi Çok Renkli (Önerilen - Renkli Portre)",
-    "contrast": 1.25,
+    "contrast": 1.30,
     "brightness": 1.05,
-    "sharpness": 1.5,
-    "saturation": 1.35,
+    "sharpness": 1.6,
+    "saturation": 1.45,
     "invert": false,
-    "max_dim": 420,
+    "max_dim": 450,
     "remove_dark_bg": false,
     "dark_thresh": 35,
     "enable_contour_reinforce": true,
     "auto_select_pen": true,
     "auto_second_monitor": true,
     "palette_black": [
-        617,
-        431
+        155,
+        598
     ],
     "palette_peach": [
-        709,
-        847
+        335,
+        1115
+    ],
+    "pen_tool": [
+        2238,
+        635
+    ],
+    "brush_dot1": [
+        570,
+        1353
     ]
 }

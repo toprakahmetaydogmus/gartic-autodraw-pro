@@ -63,21 +63,21 @@ class GarticPaletteManager:
 
     def __init__(self):
         self.color_coords: Dict[str, Tuple[int, int]] = {}
-        # Default canvas: 2K centered canvas (780, 260, 1000, 720)
-        self.calibrate_relative_to_canvas(780, 260, 1000, 720)
+        # Default canvas: 2K centered canvas (490, 220, 1560, 1050)
+        self.calibrate_relative_to_canvas(490, 220, 1560, 1050)
 
     def calibrate_relative_to_canvas(self, cx: int, cy: int, cw: int, ch: int):
         """
         Positions the 3x6 color palette relative to the Gartic Phone canvas.
         Based on mathematically verified pixel ratios from official Gartic Phone UI:
         Canvas Left is at cx, Top is at cy.
-        Black (Row 0, Col 0): (cx - int(cw * 0.1625), cy + int(ch * 0.2381)) -> (617, 431) on 2K
-        Peach (Row 5, Col 2): (cx - int(cw * 0.0708), cy + int(ch * 0.8155)) -> (709, 847) on 2K
+        Black (Row 0, Col 0): cx - int(cw * 0.2147), cy + int(ch * 0.3600) -> (155, 598) on 2K
+        Peach (Row 5, Col 2): cx - int(cw * 0.0994), cy + int(ch * 0.8524) -> (335, 1115) on 2K
         """
-        tl_x = int(round(cx - (cw * 0.1625)))
-        tl_y = int(round(cy + (ch * 0.2381)))
-        br_x = int(round(cx - (cw * 0.0708)))
-        br_y = int(round(cy + (ch * 0.8155)))
+        tl_x = int(round(cx - (cw * 0.2147)))
+        tl_y = int(round(cy + (ch * 0.3600)))
+        br_x = int(round(cx - (cw * 0.0994)))
+        br_y = int(round(cy + (ch * 0.8524)))
         self.calibrate_from_two_corners(tl_x, tl_y, br_x, br_y)
 
     def calibrate_from_two_corners(self, tl_x: int, tl_y: int, br_x: int, br_y: int):
@@ -115,8 +115,8 @@ class GarticPaletteManager:
     @staticmethod
     def quantize_and_dither_image(
         img_rgb: np.ndarray,
-        remove_dark_bg: bool = True,
-        dark_thresh: int = 60,
+        remove_dark_bg: bool = False,
+        dark_thresh: int = 40,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """
         Runs Floyd-Steinberg error diffusion across the 18 Gartic Phone colors
@@ -139,13 +139,13 @@ class GarticPaletteManager:
         terracotta_idx = PALETTE_NAMES.index("terracotta")
         brown_idx = PALETTE_NAMES.index("brown")
 
-        # Smart Portrait Warmth Enhancement (prevents pale webcam faces from turning into zombie gray)
+        # Smart Portrait Warmth Enhancement (prevents washed-out/pale webcam faces from turning into zombie gray)
         r, g, b = buf[:, :, 0], buf[:, :, 1], buf[:, :, 2]
         brightness = (r + g + b) / 3.0
-        warm_mask = (r > b - 5) & (brightness > 40) & (brightness < 240)
-        buf[warm_mask, 0] = np.clip(buf[warm_mask, 0] * 1.20 + 12, 0, 255)
-        buf[warm_mask, 1] = np.clip(buf[warm_mask, 1] * 1.08 + 6, 0, 255)
-        buf[warm_mask, 2] = np.clip(buf[warm_mask, 2] * 0.85 - 8, 0, 255)
+        warm_mask = (r >= b - 8) & (brightness > 45) & (brightness < 240)
+        buf[warm_mask, 0] = np.clip(buf[warm_mask, 0] * 1.28 + 18, 0, 255)
+        buf[warm_mask, 1] = np.clip(buf[warm_mask, 1] * 1.06 + 6, 0, 255)
+        buf[warm_mask, 2] = np.clip(buf[warm_mask, 2] * 0.80 - 12, 0, 255)
 
         for y in range(h):
             direction = 1 if y % 2 == 0 else -1
@@ -163,19 +163,19 @@ class GarticPaletteManager:
 
                 # Skin and warm portrait tone preservation:
                 # Protect facial skin from turning into cold gray or disappearing into white canvas paper!
-                is_skin = (old_p[0] > old_p[2] + 2) and (old_p[0] > 70)
+                is_skin = (old_p[0] >= old_p[2] - 2) and (old_p[0] > 65) and (old_p[0] > old_p[1] - 15)
                 if is_skin:
                     dist[gray_idx] *= 5.0
-                    dist[light_gray_idx] *= 4.0
+                    dist[light_gray_idx] *= 4.5
                     dist[dark_blue_idx] *= 5.0
                     dist[dark_green_idx] *= 4.0
                     # Prioritize vibrant peach, terracotta and warm brown
-                    dist[peach_idx] *= 0.40
-                    dist[terracotta_idx] *= 0.55
-                    dist[brown_idx] *= 0.70
+                    dist[peach_idx] *= 0.35
+                    dist[terracotta_idx] *= 0.50
+                    dist[brown_idx] *= 0.65
                     # Prevent skin highlights from turning into blank white canvas paper
                     if old_p[0] < 248:
-                        dist[white_idx] *= 3.5
+                        dist[white_idx] *= 4.0
 
                 best_idx = int(np.argmin(dist))
                 new_p = PALETTE_RGB_ARRAY[best_idx]

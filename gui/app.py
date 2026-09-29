@@ -1353,16 +1353,27 @@ class GarticAutoDrawApp(ctk.CTk):
                 self.mouse_ctrl.mouse_up()
                 time.sleep(0.085)
 
-        # Auto-select Thin Pen tool on Gartic Phone right toolbar if enabled
+        # Auto-select Thin Pen tool on Gartic Phone right toolbar AND Extra Fine Brush size (Dot 1) on bottom toolbar
         if hasattr(self, "switch_auto_pen") and self.switch_auto_pen.get():
-            pen_x = int(round(cx + cw + (cw * 0.0747)))
-            pen_y = int(round(cy + (ch * 0.2440)))
+            # 1. Select Pen Tool on right toolbar
+            pen_x = self.settings.get("pen_tool", [int(round(cx + cw + (cw * 0.1141))), int(round(cy + (ch * 0.3952)))])[0]
+            pen_y = self.settings.get("pen_tool", [int(round(cx + cw + (cw * 0.1141))), int(round(cy + (ch * 0.3952)))])[1]
             self.mouse_ctrl.set_cursor_pos(pen_x, pen_y)
-            time.sleep(0.03)
+            time.sleep(0.04)
             self.mouse_ctrl.mouse_down()
             time.sleep(0.05)
             self.mouse_ctrl.mouse_up()
-            time.sleep(0.07)
+            time.sleep(0.06)
+
+            # 2. Select Extra Fine Brush Size (Dot 1) on bottom toolbar so lines are razor-sharp!
+            dot1_x = self.settings.get("brush_dot1", [int(round(cx + (cw * 0.0513))), int(round(cy + (ch * 1.0790)))])[0]
+            dot1_y = self.settings.get("brush_dot1", [int(round(cx + (cw * 0.0513))), int(round(cy + (ch * 1.0790)))])[1]
+            self.mouse_ctrl.set_cursor_pos(dot1_x, dot1_y)
+            time.sleep(0.04)
+            self.mouse_ctrl.mouse_down()
+            time.sleep(0.05)
+            self.mouse_ctrl.mouse_up()
+            time.sleep(0.08)
 
         # Pre-select first color (this also focuses browser window cleanly without marking the canvas)
         if self.stroke_colors and len(self.stroke_colors) > 0:

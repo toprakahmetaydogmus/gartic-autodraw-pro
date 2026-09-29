@@ -503,8 +503,10 @@ class GarticAutoDrawApp(ctk.CTk):
             text_color="#38bdf8",
             command=self.reprocess_image_async,
         )
-        if self.settings.get("remove_dark_bg", True):
+        if self.settings.get("remove_dark_bg", False):
             self.switch_clean_bg.select()
+        else:
+            self.switch_clean_bg.deselect()
         self.switch_clean_bg.pack(anchor="w", padx=12, pady=(8, 4))
 
         # Contour Reinforcement Switch (Vector Line-Art Details)
@@ -1083,19 +1085,17 @@ class GarticAutoDrawApp(ctk.CTk):
     def apply_ultra_max_quality(self):
         """One-click applies the absolute best settings: ultra resolution, crisp lineart, radiant skin tones."""
         self.mode_selector.set(DrawingMode.REALISTIC_COLOR)
-        self.slider_max_dim.set(480)
-        self.slider_contrast.set(1.35)
-        self.slider_saturation.set(1.45)
-        self.slider_sharpness.set(1.85)
+        self.slider_max_dim.set(420)
+        self.slider_contrast.set(1.25)
+        self.slider_saturation.set(1.35)
+        self.slider_sharpness.set(1.50)
         self.slider_brightness.set(1.05)
-        self.slider_dark_thresh.set(65)
-        if not self.switch_clean_bg.get():
-            self.switch_clean_bg.select()
+        self.slider_dark_thresh.set(35)
         if hasattr(self, "switch_reinforce") and not self.switch_reinforce.get():
             self.switch_reinforce.select()
         self.reprocess_image_async()
         self.lbl_progress_status.configure(
-            text="👑 ULTRA MAX PRO KALİTE AKTİF! 480px çözünürlük, en ince hatlar ve canlı ten renkleri ayarlandı.",
+            text="👑 ULTRA MAX PRO KALİTE AKTİF! 420px çözünürlük, en ince hatlar ve canlı ten renkleri ayarlandı.",
             text_color="#10b981",
         )
 
@@ -1103,21 +1103,19 @@ class GarticAutoDrawApp(ctk.CTk):
         """Applies high-impact artistic styles with 1 click."""
         if style == "portrait":
             self.mode_selector.set(DrawingMode.REALISTIC_COLOR)
-            self.slider_contrast.set(1.30)
+            self.slider_contrast.set(1.25)
             self.slider_saturation.set(1.35)
             self.slider_sharpness.set(1.50)
             self.slider_brightness.set(1.05)
             self.slider_max_dim.set(420)
-            self.switch_clean_bg.select()
             msg = "👑 Ultra Realist Portre Modu Aktif! (Canlı ten & terracotta gölgeler)"
         elif style == "anime":
             self.mode_selector.set(DrawingMode.ANIME_COLOR)
             self.slider_contrast.set(1.25)
-            self.slider_saturation.set(1.45)
-            self.slider_sharpness.set(1.65)
+            self.slider_saturation.set(1.40)
+            self.slider_sharpness.set(1.60)
             self.slider_brightness.set(1.05)
             self.slider_max_dim.set(400)
-            self.switch_clean_bg.select()
             msg = "🎌 Anime & Manga Çizgi Sanatı Modu Aktif! (Cell-shading & kalın hatlar)"
         elif style == "neon":
             self.mode_selector.set(DrawingMode.CYBERPUNK_NEON)

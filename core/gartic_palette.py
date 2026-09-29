@@ -154,13 +154,6 @@ class GarticPaletteManager:
             for x in x_range:
                 old_p = buf[y, x]
 
-                # If removing dark background (e.g. webcam room shadows / Discord black bars)
-                if remove_dark_bg and np.mean(old_p) < dark_thresh:
-                    indices[y, x] = white_idx
-                    rendered_rgb[y, x] = [255, 255, 255]
-                    # Do not diffuse background darkness into subject!
-                    continue
-
                 # Redmean perceptual color distance
                 diff = PALETTE_RGB_ARRAY - old_p
                 r_bar = (old_p[0] + PALETTE_RGB_ARRAY[:, 0]) / 2.0
@@ -168,16 +161,21 @@ class GarticPaletteManager:
                        4.0 * (diff[:, 1] ** 2) + \
                        (2.0 + (255.0 - r_bar) / 256.0) * (diff[:, 2] ** 2)
 
-                # If pixel has warm/skin tones, heavily penalize cold neutral gray and dark blue:
-                if old_p[0] > old_p[2] + 2:
-                    dist[gray_idx] *= 4.5
-                    dist[light_gray_idx] *= 3.5
-                    dist[dark_blue_idx] *= 4.0
-                    dist[dark_green_idx] *= 3.0
-                    # Prioritize peach and terracotta
-                    dist[peach_idx] *= 0.55
-                    dist[terracotta_idx] *= 0.65
-                    dist[brown_idx] *= 0.80
+                # Skin and warm portrait tone preservation:
+                # Protect facial skin from turning into cold gray or disappearing into white canvas paper!
+                is_skin = (old_p[0] > old_p[2] + 2) and (old_p[0] > 70)
+                if is_skin:
+                    dist[gray_idx] *= 5.0
+                    dist[light_gray_idx] *= 4.0
+                    dist[dark_blue_idx] *= 5.0
+                    dist[dark_green_idx] *= 4.0
+                    # Prioritize vibrant peach, terracotta and warm brown
+                    dist[peach_idx] *= 0.40
+                    dist[terracotta_idx] *= 0.55
+                    dist[brown_idx] *= 0.70
+                    # Prevent skin highlights from turning into blank white canvas paper
+                    if old_p[0] < 248:
+                        dist[white_idx] *= 3.5
 
                 best_idx = int(np.argmin(dist))
                 new_p = PALETTE_RGB_ARRAY[best_idx]

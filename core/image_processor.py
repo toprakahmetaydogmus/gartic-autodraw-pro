@@ -203,8 +203,8 @@ class ImageProcessingEngine:
         epsilon: float = 1.2,
         min_run_len: int = 2,
         max_strokes: int = 6000,
-        remove_dark_bg: bool = True,
-        dark_thresh: int = 60,
+        remove_dark_bg: bool = False,
+        dark_thresh: int = 40,
         enable_contour_reinforce: bool = True,
         target_round_time: float = 72.0,
     ) -> Tuple[List[List[Tuple[int, int]]], Optional[List[str]], Image.Image]:
@@ -229,22 +229,30 @@ class ImageProcessingEngine:
         w, h = enhanced.size
         rgb_np = np.array(enhanced)
 
-        # Smart Border Background Cleaner (removes webcam room shadows / Discord borders from flooding canvas)
+        # Smart Border Background Cleaner (cleans solid dark letterboxes while protecting subject behind edge barrier)
+        border_bg = np.zeros((h, w), dtype=bool)
         if remove_dark_bg:
+            gray_pre = cv2.cvtColor(rgb_np, cv2.COLOR_RGB2GRAY)
+            edges_pre = cv2.Canny(gray_pre, 30, 90)
+            kernel = np.ones((3, 3), np.uint8)
+            dilated_edges = cv2.dilate(edges_pre, kernel, iterations=1)
+
             bg_mask = np.zeros((h + 2, w + 2), np.uint8)
+            bg_mask[1:-1, 1:-1] = ((dilated_edges > 0) * 2).astype(np.uint8)
+
             corners = [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)]
             for cx_c, cy_c in corners:
-                if np.mean(rgb_np[cy_c, cx_c]) < (dark_thresh + 20):
+                if np.mean(rgb_np[cy_c, cx_c]) < dark_thresh and bg_mask[cy_c + 1, cx_c + 1] == 0:
                     cv2.floodFill(
                         rgb_np.copy(),
                         bg_mask,
                         (cx_c, cy_c),
                         (255, 255, 255),
-                        (28, 28, 28),
-                        (28, 28, 28),
+                        (14, 14, 14),
+                        (14, 14, 14),
                         flags=cv2.FLOODFILL_MASK_ONLY,
                     )
-            border_bg = bg_mask[1:-1, 1:-1] > 0
+            border_bg = (bg_mask[1:-1, 1:-1] == 1)
             rgb_np[border_bg] = [255, 255, 255]
 
         gray_np = cv2.cvtColor(rgb_np, cv2.COLOR_RGB2GRAY)
